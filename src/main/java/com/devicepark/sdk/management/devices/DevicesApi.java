@@ -2,7 +2,7 @@ package com.devicepark.sdk.management.devices;
 
 import com.devicepark.sdk.core.http.SdkHttpResponse;
 import com.devicepark.sdk.core.json.JsonMapper;
-import com.devicepark.sdk.management.internal.ManagementApiRuntime;
+import com.devicepark.sdk.management.internal.ManagementRequestExecutor;
 import com.devicepark.sdk.model.common.PageDto;
 import com.devicepark.sdk.model.common.Sorting;
 import com.devicepark.sdk.model.devices.Device;
@@ -22,10 +22,10 @@ import java.util.Map;
  */
 public final class DevicesApi {
 
-    private final ManagementApiRuntime runtime;
+    private final ManagementRequestExecutor requests;
 
-    public DevicesApi(ManagementApiRuntime runtime) {
-        this.runtime = runtime;
+    public DevicesApi(ManagementRequestExecutor requests) {
+        this.requests = requests;
     }
 
     /**
@@ -52,7 +52,7 @@ public final class DevicesApi {
         qs.put("sorting.sortBy", s.getSortBy());
         qs.put("sorting.direction", s.getDirection() != null ? s.getDirection().name() : null);
 
-        SdkHttpResponse resp = runtime.get("/devices", qs);
+        SdkHttpResponse resp = requests.get("/devices", qs);
         return JsonMapper.fromJson(resp.body(), new TypeReference<PageDto<Device>>() {});
     }
 }

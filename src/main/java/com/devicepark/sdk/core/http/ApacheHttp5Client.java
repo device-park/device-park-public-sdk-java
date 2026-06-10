@@ -4,18 +4,22 @@ import com.devicepark.sdk.core.exception.SdkClientException;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.util.Timeout;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,11 +80,16 @@ public final class ApacheHttp5Client implements SdkHttpClient {
         private Duration responseTimeout = Duration.ofSeconds(30);
         private int maxConnTotal = 50;
         private int maxConnPerRoute = 20;
+        private final List<HttpRequestInterceptor> requestInterceptors = new ArrayList<>();
 
         public Builder connectTimeout(Duration d) { this.connectTimeout = d; return this; }
         public Builder responseTimeout(Duration d) { this.responseTimeout = d; return this; }
         public Builder maxConnTotal(int v) { this.maxConnTotal = v; return this; }
         public Builder maxConnPerRoute(int v) { this.maxConnPerRoute = v; return this; }
+        public Builder addRequestInterceptorLast(HttpRequestInterceptor interceptor) {
+            this.requestInterceptors.add(interceptor);
+            return this;
+        }
 
         public ApacheHttp5Client build() {
             PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
@@ -93,10 +102,15 @@ public final class ApacheHttp5Client implements SdkHttpClient {
                     .setResponseTimeout(Timeout.ofMilliseconds(responseTimeout.toMillis()))
                     .build();
 
-            CloseableHttpClient client = HttpClients.custom()
+            HttpClientBuilder httpBuilder = HttpClients.custom()
                     .setConnectionManager(cm)
-                    .setDefaultRequestConfig(requestConfig)
-                    .build();
+                    .setDefaultRequestConfig(requestConfig);
+
+            for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                httpBuilder.addRequestInterceptorLast(interceptor);
+            }
+
+            CloseableHttpClient client = httpBuilder.build();
 
             return new ApacheHttp5Client(client);
         }

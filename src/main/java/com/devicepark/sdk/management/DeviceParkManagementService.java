@@ -2,9 +2,11 @@ package com.devicepark.sdk.management;
 
 import com.devicepark.sdk.auth.DeviceParkAuthClient;
 import com.devicepark.sdk.core.endpoint.EndpointProvider;
+import com.devicepark.sdk.core.http.AuthRefreshingHttpClient;
 import com.devicepark.sdk.core.http.SdkHttpClient;
 import com.devicepark.sdk.management.devices.DevicesApi;
-import com.devicepark.sdk.management.internal.ManagementApiRuntime;
+import com.devicepark.sdk.management.internal.DefaultManagementRequestExecutor;
+import com.devicepark.sdk.management.internal.ManagementRequestExecutor;
 
 /**
  * Device Park <b>Management</b> servis grubu. {@link com.devicepark.sdk.DeviceParkApiClient}
@@ -43,8 +45,10 @@ public final class DeviceParkManagementService {
     public DeviceParkManagementService(DeviceParkAuthClient authClient,
                                        SdkHttpClient httpClient,
                                        EndpointProvider endpointProvider) {
-        ManagementApiRuntime runtime = new ManagementApiRuntime(httpClient, authClient, endpointProvider);
-        this.devices = new DevicesApi(runtime);
+        SdkHttpClient authAwareHttpClient = new AuthRefreshingHttpClient(httpClient, authClient);
+        ManagementRequestExecutor requestExecutor =
+                new DefaultManagementRequestExecutor(authAwareHttpClient, endpointProvider);
+        this.devices = new DevicesApi(requestExecutor);
         // İleride buraya sessions/storage init edilecek.
     }
 
