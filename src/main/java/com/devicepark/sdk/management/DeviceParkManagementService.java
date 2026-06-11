@@ -45,9 +45,22 @@ public final class DeviceParkManagementService {
     public DeviceParkManagementService(DeviceParkAuthClient authClient,
                                        SdkHttpClient httpClient,
                                        EndpointProvider endpointProvider) {
-        SdkHttpClient authAwareHttpClient = new AuthRefreshingHttpClient(httpClient, authClient);
+        this(authClient, httpClient, endpointProvider, true);
+    }
+
+    /**
+     * @param decorateWithSdkAuthDecorator true ise SDK auth decorator kullanılır,
+     *                                     false ise HTTP client zaten auth-aware kabul edilir.
+     */
+    public DeviceParkManagementService(DeviceParkAuthClient authClient,
+                                       SdkHttpClient httpClient,
+                                       EndpointProvider endpointProvider,
+                                       boolean decorateWithSdkAuthDecorator) {
+        SdkHttpClient effectiveHttpClient = decorateWithSdkAuthDecorator
+                ? new AuthRefreshingHttpClient(httpClient, authClient)
+                : httpClient;
         ManagementRequestExecutor requestExecutor =
-                new DefaultManagementRequestExecutor(authAwareHttpClient, endpointProvider);
+                new DefaultManagementRequestExecutor(effectiveHttpClient, endpointProvider);
         this.devices = new DevicesApi(requestExecutor);
         // İleride buraya sessions/storage init edilecek.
     }
@@ -61,4 +74,3 @@ public final class DeviceParkManagementService {
     // public SessionsApi sessions() { return sessions; }
     // public StorageApi storage() { return storage; }
 }
-

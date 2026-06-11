@@ -1,6 +1,7 @@
 package com.devicepark.sdk.core.http;
 
 import com.devicepark.sdk.core.exception.SdkClientException;
+import org.apache.hc.client5.http.classic.ExecChainHandler;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -81,6 +82,7 @@ public final class ApacheHttp5Client implements SdkHttpClient {
         private int maxConnTotal = 50;
         private int maxConnPerRoute = 20;
         private final List<HttpRequestInterceptor> requestInterceptors = new ArrayList<>();
+        private final List<NamedExecInterceptor> execInterceptors = new ArrayList<>();
 
         public Builder connectTimeout(Duration d) { this.connectTimeout = d; return this; }
         public Builder responseTimeout(Duration d) { this.responseTimeout = d; return this; }
@@ -88,6 +90,11 @@ public final class ApacheHttp5Client implements SdkHttpClient {
         public Builder maxConnPerRoute(int v) { this.maxConnPerRoute = v; return this; }
         public Builder addRequestInterceptorLast(HttpRequestInterceptor interceptor) {
             this.requestInterceptors.add(interceptor);
+            return this;
+        }
+
+        public Builder addExecInterceptorLast(String name, ExecChainHandler interceptor) {
+            this.execInterceptors.add(new NamedExecInterceptor(name, interceptor));
             return this;
         }
 
@@ -109,11 +116,23 @@ public final class ApacheHttp5Client implements SdkHttpClient {
             for (HttpRequestInterceptor interceptor : requestInterceptors) {
                 httpBuilder.addRequestInterceptorLast(interceptor);
             }
+            for (NamedExecInterceptor interceptor : execInterceptors) {
+                httpBuilder.addExecInterceptorLast(interceptor.name, interceptor.handler);
+            }
 
             CloseableHttpClient client = httpBuilder.build();
 
             return new ApacheHttp5Client(client);
         }
+
+        private static final class NamedExecInterceptor {
+            private final String name;
+            private final ExecChainHandler handler;
+
+            private NamedExecInterceptor(String name, ExecChainHandler handler) {
+                this.name = name;
+                this.handler = handler;
+            }
+        }
     }
 }
-
