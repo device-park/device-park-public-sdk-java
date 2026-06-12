@@ -1,4 +1,4 @@
-package com.devicepark.sdk.auth.token;
+package com.devicepark.sdk.authentication.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,8 +17,6 @@ public final class AccessToken {
     private final String accessToken;
     private final String tokenType;
     private final long expiresInSeconds;
-    private final String refreshToken;
-    private final String scope;
     private final Instant issuedAt;
 
     public AccessToken(
@@ -39,13 +37,6 @@ public final class AccessToken {
         this.scope = scope;
         this.issuedAt = issuedAt;
     }
-
-    public String accessToken() { return accessToken; }
-    public String tokenType() { return tokenType; }
-    public long expiresInSeconds() { return expiresInSeconds; }
-    public String refreshToken() { return refreshToken; }
-    public String scope() { return scope; }
-    public Instant issuedAt() { return issuedAt; }
 
     public Instant expiresAt() {
         return issuedAt.plusSeconds(expiresInSeconds);

@@ -22,6 +22,7 @@ public class ListDevicesRequest {
     private Sorting sorting = new Sorting();
 
     public Sorting getSorting() { return sorting; }
+
     public void setSorting(Sorting sorting) {
         this.sorting = sorting != null ? sorting : new Sorting();
     }

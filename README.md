@@ -105,7 +105,7 @@ export DEVICEPARK_CLIENT_SECRET=your-client-secret
 ```
 
 ```java
-import com.devicepark.sdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import com.devicepark.sdk.authentication.credentials.EnvironmentVariableCredentialsProvider;
 
 DeviceParkManagementClient client = DeviceParkManagementClient.builder()
         .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
@@ -127,7 +127,7 @@ devicepark_client_secret = staging-client-secret
 ```
 
 ```java
-import com.devicepark.sdk.auth.credentials.ProfileCredentialsProvider;
+import com.devicepark.sdk.authentication.credentials.ProfileCredentialsProvider;
 
 // Default profile
 DeviceParkManagementClient client = DeviceParkManagementClient.builder()
