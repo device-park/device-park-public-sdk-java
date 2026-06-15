@@ -22,19 +22,15 @@ public final class AccessToken {
     public AccessToken(
             @JsonProperty("access_token") String accessToken,
             @JsonProperty("token_type") String tokenType,
-            @JsonProperty("expires_in") long expiresInSeconds,
-            @JsonProperty("refresh_token") String refreshToken,
-            @JsonProperty("scope") String scope) {
-        this(accessToken, tokenType, expiresInSeconds, refreshToken, scope, Instant.now());
+            @JsonProperty("expires_in") long expiresInSeconds) {
+        this(accessToken, tokenType, expiresInSeconds, Instant.now());
     }
 
     public AccessToken(String accessToken, String tokenType, long expiresInSeconds,
-                       String refreshToken, String scope, Instant issuedAt) {
+                       Instant issuedAt) {
         this.accessToken = Objects.requireNonNull(accessToken, "accessToken");
         this.tokenType = tokenType != null ? tokenType : "Bearer";
         this.expiresInSeconds = expiresInSeconds;
-        this.refreshToken = refreshToken;
-        this.scope = scope;
         this.issuedAt = issuedAt;
     }
 

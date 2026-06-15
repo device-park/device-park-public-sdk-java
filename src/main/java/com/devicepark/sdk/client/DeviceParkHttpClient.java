@@ -2,7 +2,7 @@ package com.devicepark.sdk.client;
 
 import com.devicepark.sdk.authentication.credentials.Credentials;
 import com.devicepark.sdk.authentication.token.AccessToken;
-import com.devicepark.sdk.exception.DeviceParkException;
+import com.devicepark.sdk.core.AbstractApiService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
@@ -25,7 +25,7 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
-public class DeviceParkHttpClient implements Closeable {
+public class DeviceParkHttpClient extends AbstractApiService implements Closeable {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -53,38 +53,64 @@ public class DeviceParkHttpClient implements Closeable {
             addHeaders(request, null);
             return execute(request);
         } catch (IOException e) {
-            throw new DeviceParkException("Failed to execute GET request for path: " + path, e);
+            throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
     }
 
-    public String get(String path, Map<String, String> headers) throws IOException {
-        HttpGet request = new HttpGet(buildUrl(path));
-        addHeaders(request, headers);
-        return execute(request);
-    }
-
-    public String post(String path, String body, Map<String, String> headers) throws IOException {
-        HttpPost request = new HttpPost(buildUrl(path));
-        addHeaders(request, headers);
-        if (body != null) {
-            request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+    public String get(String path, Map<String, ?> queryParams) {
+        try {
+            HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
+            addHeaders(request, null);
+            return execute(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
-        return execute(request);
     }
 
-    public String put(String path, String body, Map<String, String> headers) throws IOException {
-        HttpPut request = new HttpPut(buildUrl(path));
-        addHeaders(request, headers);
-        if (body != null) {
-            request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+    public String get(String path, Map<String, ?> queryParams, Map<String, String> headers) {
+        try {
+            HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
+            addHeaders(request, headers);
+            return execute(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
-        return execute(request);
     }
 
-    public String delete(String path, Map<String, String> headers) throws IOException {
-        HttpDelete request = new HttpDelete(buildUrl(path));
-        addHeaders(request, headers);
-        return execute(request);
+    public String post(String path, String body, Map<String, String> headers) {
+        try {
+            HttpPost request = new HttpPost(buildUrl(path));
+            addHeaders(request, headers);
+            if (body != null) {
+                request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+            }
+            return execute(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute POST request for path: " + path, e);
+        }
+    }
+
+    public String put(String path, String body, Map<String, String> headers) {
+        try {
+            HttpPut request = new HttpPut(buildUrl(path));
+            addHeaders(request, headers);
+            if (body != null) {
+                request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+            }
+            return execute(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute PUT request for path: " + path, e);
+        }
+    }
+
+    public String delete(String path, Map<String, String> headers) {
+        try {
+            HttpDelete request = new HttpDelete(buildUrl(path));
+            addHeaders(request, headers);
+            return execute(request);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute DELETE request for path: " + path, e);
+        }
     }
 
     private String execute(ClassicHttpRequest request) throws IOException {

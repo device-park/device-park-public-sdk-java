@@ -19,6 +19,7 @@ import com.devicepark.sdk.model.common.Sorting;
  */
 public class ListDevicesRequest {
 
+    /* TODO Filter Request Eklenecek */
     private Sorting sorting = new Sorting();
 
     public Sorting getSorting() { return sorting; }

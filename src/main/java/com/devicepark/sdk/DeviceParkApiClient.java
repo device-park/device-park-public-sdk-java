@@ -22,6 +22,10 @@ public class DeviceParkApiClient implements Closeable {
         return new DeviceParkApiClientBuilder();
     }
 
+    public DevicesApi devices() {
+        return devices.get();
+    }
+
     @Override
     public void close() throws IOException {
         this.httpClient.close();
