@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * SDK içi paylaşılan, threadsafe Jackson {@link ObjectMapper} fabrikası.
+ * SDK içi paylaşılan, threadüşafe Jackson {@link ObjectMapper} fabrikası.
  */
 public final class JsonMapper {
 

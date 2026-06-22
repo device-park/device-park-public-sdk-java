@@ -1,5 +1,23 @@
 package com.devicepark.sdk.authentication.credentials;
 
+/**
+ * OAuth2 client-credentials akışında kullanılan değiştirilemez (immutable)
+ * kimlik bilgisi tutucusu.
+ *
+ * <p>Yalnızca {@link #of(String, String)} fabrika metodu üzerinden oluşturulabilir;
+ * her iki alanın da boş veya {@code null} olmaması garanti edilir.</p>
+ *
+ * <h2>Öörnek</h2>
+ * <pre>
+ * Credentials credentials = Credentials.of("my-client-id", "my-client-secret");
+ * </pre>
+ *
+ * <h2>Güvenlik</h2>
+ * <p>{@code clientSecret} hassas bir bilgidir. Loglara, exception mesajlarına
+ * veya kalıcı depolamaya yazmaktan kaçının.</p>
+ *
+ * @since 1.0.0
+ */
 public final class Credentials {
 
     private final String clientId;

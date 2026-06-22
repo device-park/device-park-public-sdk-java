@@ -1,4 +1,4 @@
-package com.devicepark.sdk.model.devices;
+package com.devicepark.sdk.model.sessions;
 
 import com.devicepark.sdk.model.common.SearchOperation;
 import com.devicepark.sdk.model.common.SortDirection;
@@ -9,42 +9,46 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /management/api/v1/public/devices} isteği için parametre objesi.
+ * {@code GET /session/api/v2/public/sessions} isteği için sayfalama, sıralama
+ * ve filter parametrelerini taşıyan istek modeli.
  *
- * <p>Server tarafındaki {@code DevicePaginationRequest} ile birebir eşleşir.
- * Spring controller {@code @ModelAttribute} ile bind eder, bu yüzden
- * setter'lı POJO yapısında tutulur.</p>
- *
+ * <h2>Öörnek</h2>
  * <pre>
- * var req = ListDevicesRequest.builder()
- *         .page(0).size(50)
- *         .sortBy("ID").direction(SortDirection.DESC)
+ * DeviceSessionRequest req = DeviceSessionRequest.builder()
+ *         .page(0).size(20)
+ *         .addFilter(SessionFilter.STATE, "FINISHED", SearchOperation.EQUAL)
  *         .build();
  * </pre>
+ *
+ * @since 1.0.0
  */
-public class ListDevicesRequest {
+public class DeviceSessionRequest {
 
-    private List<DeviceFilterRequest> filters = new ArrayList<>();
+    private List<DeviceSessionFilterRequest> filters = new ArrayList<>();
     private Sorting sorting = new Sorting();
 
-    public List<DeviceFilterRequest> getFilters() {
+    public List<DeviceSessionFilterRequest> getFilters() {
         return Collections.unmodifiableList(filters);
     }
 
-    public void setFilters(List<DeviceFilterRequest> filters) {
+    public void setFilters(List<DeviceSessionFilterRequest> filters) {
         this.filters = filters != null ? new ArrayList<>(filters) : new ArrayList<>();
     }
 
-    public Sorting getSorting() { return sorting; }
+    public Sorting getSorting() {
+        return sorting;
+    }
 
     public void setSorting(Sorting sorting) {
         this.sorting = sorting != null ? sorting : new Sorting();
     }
 
-    public static Builder builder() { return new Builder(); }
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
-        private final ListDevicesRequest req = new ListDevicesRequest();
+        private final DeviceSessionRequest req = new DeviceSessionRequest();
 
         public Builder page(int page) {
             req.sorting.setPage(page);
@@ -66,16 +70,19 @@ public class ListDevicesRequest {
             return this;
         }
 
-        public Builder addFilter(DeviceFilter key, Object value, SearchOperation operation) {
-            req.filters.add(DeviceFilterRequest.of(key, value, operation));
+        public Builder addFilter(SessionFilter key, Object value, SearchOperation operation) {
+            req.filters.add(DeviceSessionFilterRequest.of(key, value, operation));
             return this;
         }
 
-        public Builder filters(List<DeviceFilterRequest> filters) {
+        public Builder filters(List<DeviceSessionFilterRequest> filters) {
             req.setFilters(filters);
             return this;
         }
 
-        public ListDevicesRequest build() { return req; }
+        public DeviceSessionRequest build() {
+            return req;
+        }
     }
 }
+

@@ -8,6 +8,14 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+/**
+ * {@link Supplier} için yardımcı (utility) metotlar.
+ *
+ * <p>Bu sınıf SDK'nın iç (internal) parçasıdır; bağımlı uygulamaların
+ * doğrudan kullanmaması önerilir.</p>
+ *
+ * @since 1.0.0
+ */
 public final class Suppliers {
   private Suppliers() {
   }
