@@ -21,6 +21,8 @@ public final class Device {
     private final String platformVersion;
     private final String version;
     private final String state;
+    private final Boolean isSimulator;
+    private final Boolean isPublic;
 
     @JsonCreator
     public Device(
@@ -32,7 +34,9 @@ public final class Device {
             @JsonProperty("platform") String platform,
             @JsonProperty("platformVersion") String platformVersion,
             @JsonProperty("version") String version,
-            @JsonProperty("state") String state) {
+            @JsonProperty("state") String state,
+            @JsonProperty("isSimulator") Boolean isSimulator,
+            @JsonProperty("isPublic") Boolean isPublic) {
         this.id = id;
         this.serial = serial;
         this.marketName = marketName;
@@ -42,6 +46,8 @@ public final class Device {
         this.platformVersion = platformVersion;
         this.version = version;
         this.state = state;
+        this.isSimulator = isSimulator;
+        this.isPublic = isPublic;
     }
 
     public Long id() { return id; }
@@ -53,6 +59,14 @@ public final class Device {
     public String platformVersion() { return platformVersion; }
     public String version() { return version; }
     public String state() { return state; }
+
+    public Boolean isSimulator() {
+        return isSimulator;
+    }
+
+    public Boolean isPublic() {
+        return isPublic;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -71,7 +85,7 @@ public final class Device {
     public String toString() {
         return "Device(id=" + id + ", serial=" + serial
                 + ", model=" + model + ", platform=" + platform + " " + platformVersion
-                + ", state=" + state + ")";
+                + ", state=" + state + ", isSimulator=" + isSimulator + ", isPublic=" + isPublic + ")";
     }
 }
 

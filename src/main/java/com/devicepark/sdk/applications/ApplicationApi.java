@@ -90,6 +90,18 @@ public final class ApplicationApi {
      *                                  {@code version} 50 karakteri aşarsa
      */
     public Application upload(InputStream fileStream, String fileName, String version) {
+        return upload(fileStream, fileName, version, false);
+    }
+
+    /**
+     * {@code application/octet-stream} ile {@link InputStream} üzerinden dosya yükler.
+     *
+     * @param fileStream     dosya içeriği (zorunlu)
+     * @param fileName       sunucuda kullanılacak dosya adı
+     * @param version        uygulama versiyonu
+     * @param imageInjection true ise gadget injection uygulanır
+     */
+    public Application upload(InputStream fileStream, String fileName, String version, boolean imageInjection) {
         if (fileStream == null) {
             throw new IllegalArgumentException("fileStream cannot be null");
         }
@@ -101,6 +113,7 @@ public final class ApplicationApi {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("file-name", fileName);
         headers.put("version", version);
+        headers.put("image-injection", String.valueOf(imageInjection));
 
         String response = deviceParkHttpClient.postStream(APPLICATION_PATH, fileStream, headers);
         return JsonMapper.fromJson(response.getBytes(), new TypeReference<Application>() {
