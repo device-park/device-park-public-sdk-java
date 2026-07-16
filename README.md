@@ -35,7 +35,7 @@ Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.devicepark</groupId>
+  <groupId>io.testinium.devicepark</groupId>
     <artifactId>device-park-public-sdk</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -47,9 +47,9 @@ Add the following dependency to your `pom.xml`:
 
 ```java
 import com.devicepark.sdk.management.DeviceParkManagementClient;
-import com.devicepark.sdk.model.common.PageDto;
-import com.devicepark.sdk.model.devices.Device;
-import com.devicepark.sdk.model.devices.ListDevicesRequest;
+import common.model.io.testinium.devicepark.PageDto;
+import devices.model.io.testinium.devicepark.Device;
+import devices.model.io.testinium.devicepark.ListDevicesRequest;
 
 // 1. Build the client
 DeviceParkManagementClient client = DeviceParkManagementClient.builder()
@@ -57,15 +57,23 @@ DeviceParkManagementClient client = DeviceParkManagementClient.builder()
         .credentials("your-client-id", "your-client-secret")
         .build();
 
-// 2. List devices (using default pagination)
-PageDto<Device> result = client.devices().list(ListDevicesRequest.builder().build());
+        // 2. List devices (using default pagination)
+        PageDto<Device> result = client.devices().list(ListDevicesRequest.builder().build());
 
-System.out.println("Total devices : " + result.totalElements());
-System.out.println("Total pages   : " + result.totalPages());
-System.out.println("Devices       : " + result.data());
+System.out.
+
+        println("Total devices : "+result.totalElements());
+        System.out.
+
+        println("Total pages   : "+result.totalPages());
+        System.out.
+
+        println("Devices       : "+result.data());
 
 // 3. Close the client (release resources)
-client.close();
+        client.
+
+        close();
 ```
 
 > **Tip:** `DeviceParkManagementClient` implements `java.io.Closeable`, so you can use it with `try-with-resources`.
@@ -195,8 +203,8 @@ PageDto<Device> result = client.devices().list();
 Fetches the device list with custom pagination and sorting parameters.
 
 ```java
-import com.devicepark.sdk.model.common.SortDirection;
-import com.devicepark.sdk.model.devices.ListDevicesRequest;
+import common.model.io.testinium.devicepark.SortDirection;
+import devices.model.io.testinium.devicepark.ListDevicesRequest;
 
 PageDto<Device> result = client.devices().list(
         ListDevicesRequest.builder()
