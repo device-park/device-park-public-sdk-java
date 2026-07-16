@@ -3,10 +3,9 @@ package io.testinium.devicepark.model.sessions.screenRecord;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Screen-record listeleme için tek bir filter kaydı.
+ * Single filter record for screen-record listing.
  *
- * <p>Genellikle doğrudan kurulmaz; {@link ScreenRecordPaginationRequest.Builder#addFilter}
- * üzerinden eklenir.</p>
+ * <p>Typically not constructed directly; added via {@link ScreenRecordPaginationRequest.Builder#addFilter}.</p>
  *
  * @since 1.0.0
  */

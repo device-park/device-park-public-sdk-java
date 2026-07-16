@@ -13,13 +13,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Cihaz yönetimi (devices) işlemleri için API servisi.
+ * API service for device management (devices) operations.
  *
- * <p>Yetkili istemcinin görebildiği cihazları listelemek ve seri numarasıyla
- * detay almak için kullanılır.</p>
+ * <p>Used to list devices visible to the authorized client and fetch details
+ * by serial number.</p>
  *
- * <p>Bu servis instaönce'larını {@link
- * DeviceParkApiClient#devices()} ile elde edin.</p>
+ * <p>Obtain instances of this service via {@link
+ * DeviceParkApiClient#devices()}.</p>
  *
  * <h2>Endpoint Base Path</h2>
  * <p>{@code /management/api/v1/public/devices}</p>
@@ -31,20 +31,20 @@ public final class DevicesApi {
     private final DeviceParkHttpClient deviceParkHttpClient;
 
     /**
-     * Yeni bir {@code DevicesApi} oluşturur.
+     * Creates a new {@code DevicesApi}.
      *
-     * @param deviceParkHttpClient paylaşılan HTTP istemcisi
+     * @param deviceParkHttpClient the shared HTTP client
      */
     public DevicesApi(DeviceParkHttpClient deviceParkHttpClient) {
         this.deviceParkHttpClient = deviceParkHttpClient;
     }
 
     /**
-     * Cihazları sayfalı olarak listeler.
+     * Lists devices in a paginated manner.
      *
-     * @param request sayfalama/sıralama parametreleri; {@code null} verilirse
-     *                varsayılan değerler kullanılır
-     * @return tek sayfalık {@link Device} listesi
+     * @param request pagination/sorting parameters; if {@code null},
+     *                default values are used
+     * @return a single page of {@link Device} list
      */
     public PageDto<Device> list(ListDevicesRequest request) {
         ListDevicesRequest req = request != null ? request : ListDevicesRequest.builder().build();
@@ -62,10 +62,10 @@ public final class DevicesApi {
     }
 
     /**
-     * Seri numarasına göre tek bir cihazın detaylarını getirir.
+     * Fetches details of a single device by serial number.
      *
-     * @param serial cihazın benzersiz seri numarası
-     * @return cihaz detayı
+     * @param serial the device's unique serial number
+     * @return device details
      */
     public Device get(String serial) {
         String response = deviceParkHttpClient.get("/management/api/v1/public/devices/" + serial, null);

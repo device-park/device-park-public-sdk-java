@@ -3,10 +3,9 @@ package io.testinium.devicepark.model.devices;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Cihaz listeleme için tek bir filter kaydı.
+ * Single filter record for device listing.
  *
- * <p>Genellikle doğrudan kurulmaz; {@link ListDevicesRequest.Builder#addFilter}
- * üzerinden eklenir.</p>
+ * <p>Typically not constructed directly; added via {@link ListDevicesRequest.Builder#addFilter}.</p>
  *
  * @since 1.0.0
  */

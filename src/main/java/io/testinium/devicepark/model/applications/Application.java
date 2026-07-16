@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Yüklenmiş bir mobil uygulamayı temsil eden değiştirilemez (immutable) model.
+ * Immutable model representing an uploaded mobile application.
  *
- * <p>Server tarafındaki {@code ApplicationResponse} ile birebir eşleşir.
- * Aynı {@code fileKey} altında birden fazla {@link #revision()} bulunabilir;
- * her revision farklı bir {@link #version()} taşır.</p>
+ * <p>Maps one-to-one to the server-side {@code ApplicationResponse}.
+ * Multiple {@link #revision()}s can exist under the same {@code fileKey};
+ * each revision carries a different {@link #version()}.</p>
  *
- * <p>Eşitlik {@link #fileKey()} üzerinden hesaplanır.</p>
+ * <p>Equality is computed via {@link #fileKey()}.</p>
  *
  * @since 1.0.0
  */

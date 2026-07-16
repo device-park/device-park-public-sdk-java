@@ -9,10 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /session/api/v2/public/sessions} isteği için sayfalama, sıralama
- * ve filter parametrelerini taşıyan istek modeli.
+ * Request model carrying pagination, sorting, and filter parameters
+ * for {@code GET /session/api/v2/public/sessions} request.
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * DeviceSessionRequest req = DeviceSessionRequest.builder()
  *         .page(0).size(20)

@@ -9,11 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /storage/api/v1/public/sessions/{sessionId}/screen-records}
- * isteği için sayfalama, sıralama ve filter parametrelerini taşıyan istek
- * modeli.
+ * Request model carrying pagination, sorting, and filter parameters
+ * for {@code GET /storage/api/v1/public/sessions/{sessionId}/screen-records}
+ * request.
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * ScreenRecordPaginationRequest req = ScreenRecordPaginationRequest.builder()
  *         .page(0).size(20)

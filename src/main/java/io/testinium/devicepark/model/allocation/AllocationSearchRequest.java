@@ -9,10 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /allocation/api/v2/public/allocations} isteği için sayfalama,
- * sıralama ve filter parametrelerini taşıyan istek modeli.
+ * Request model carrying pagination, sorting, and filter parameters
+ * for {@code GET /allocation/api/v2/public/allocations} request.
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * AllocationSearchRequest req = AllocationSearchRequest.builder()
  *         .page(0).size(20)

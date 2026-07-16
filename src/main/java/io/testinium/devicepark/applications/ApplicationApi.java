@@ -14,13 +14,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Mobil uygulama (APK/IPA) yönetimi için API servisi.
+ * API service for mobile application (APK/IPA) management.
  *
- * <p>Yüklenen uygulamalar testler sırasında cihazlara kurulabilir. Aynı
- * {@code fileKey} altında birden fazla revizyon (version) saklanabilir.</p>
+ * <p>Uploaded applications can be installed on devices during tests. Multiple
+ * revisions (versions) can be stored under the same {@code fileKey}.</p>
  *
- * <p>Bu servis instaönce'larını {@link
- * DeviceParkApiClient#applications()} ile elde edin.</p>
+ * <p>Obtain instances of this service via {@link
+ * DeviceParkApiClient#applications()}.</p>
  *
  * <h2>Endpoint Base Path</h2>
  * <p>{@code /storage/api/v1/public/applications}</p>
@@ -34,23 +34,23 @@ public final class ApplicationApi {
     private final DeviceParkHttpClient deviceParkHttpClient;
 
     /**
-     * Yeni bir {@code ApplicationApi} oluşturur.
+     * Creates a new {@code ApplicationApi}.
      *
-     * <p>Genellikle doğrudan çağrılmaz; {@link
-     * DeviceParkApiClient#applications()} kullanın.</p>
+     * <p>Usually not called directly; use {@link
+     * DeviceParkApiClient#applications()}.</p>
      *
-     * @param deviceParkHttpClient paylaşılan HTTP istemcisi
+     * @param deviceParkHttpClient the shared HTTP client
      */
     public ApplicationApi(DeviceParkHttpClient deviceParkHttpClient) {
         this.deviceParkHttpClient = deviceParkHttpClient;
     }
 
     /**
-     * Yetkili istemciye ait uygulamaları sayfalı olarak listeler.
+     * Lists applications belonging to the authorized client in a paginated manner.
      *
-     * @param request sayfalama/sıralama parametreleri; {@code null} verilirse
-     *                varsayılan değerler kullanılır
-     * @return tek sayfalık {@link Application} listesi
+     * @param request pagination/sorting parameters; if {@code null},
+     *                default values are used
+     * @return a single page of {@link Application} list
      */
     public PageDto<Application> list(ApplicationPaginationRequest request) {
         ApplicationPaginationRequest req = request != null ? request : ApplicationPaginationRequest.builder().build();
@@ -68,13 +68,12 @@ public final class ApplicationApi {
     }
 
     /**
-     * {@code application/octet-stream} ile {@link InputStream} üzerinden dosya
-     * yükler.
+     * Uploads a file via {@link InputStream} with {@code application/octet-stream}.
      *
-     * <p>Stream'in kapatılması çağıran tarafın sorumluluğundadır
-     * (try-with-resources önerilir).</p>
+     * <p>Closing the stream is the caller's responsibility
+     * (try-with-resources is recommended).</p>
      *
-     * <h3>Öörnek</h3>
+     * <h3>Example</h3>
      * <pre>
      * try (InputStream in = Files.newInputStream(Paths.get("/path/app.apk"))) {
      *     Application app = client.applications().upload(in, "app.apk", "1.0.0");
@@ -82,25 +81,25 @@ public final class ApplicationApi {
      * }
      * </pre>
      *
-     * @param fileStream dosya içeriği (zorunlu)
-     * @param fileName   sunucuda kullanılacak dosya adı; {@code file-name} header
-     *                   olarak iletilir (zorunlu)
-     * @param version    uygulama versiyonu, en fazla 50 karakter (zorunlu)
-     * @return yüklenen uygulamanın metadata'sı
-     * @throws IllegalArgumentException herhangi bir parametre boş/null ise veya
-     *                                  {@code version} 50 karakteri aşarsa
+     * @param fileStream file content (required)
+     * @param fileName   file name to be used on the server; sent as {@code file-name} header
+     *                   (required)
+     * @param version    application version, maximum 50 characters (required)
+     * @return metadata of the uploaded application
+     * @throws IllegalArgumentException if any parameter is empty/null or
+     *                                  {@code version} exceeds 50 characters
      */
     public Application upload(InputStream fileStream, String fileName, String version) {
         return upload(fileStream, fileName, version, false);
     }
 
     /**
-     * {@code application/octet-stream} ile {@link InputStream} üzerinden dosya yükler.
+     * Uploads a file via {@link InputStream} with {@code application/octet-stream}.
      *
-     * @param fileStream     dosya içeriği (zorunlu)
-     * @param fileName       sunucuda kullanılacak dosya adı
-     * @param version        uygulama versiyonu
-     * @param imageInjection true ise gadget injection uygulanır
+     * @param fileStream     file content (required)
+     * @param fileName       file name to be used on the server
+     * @param version        application version
+     * @param imageInjection if true, gadget injection is applied
      */
     public Application upload(InputStream fileStream, String fileName, String version, boolean imageInjection) {
         if (fileStream == null) {
@@ -122,10 +121,10 @@ public final class ApplicationApi {
     }
 
     /**
-     * Verilen {@code fileKey}'e ait uygulamayı (ve tüm revizyonlarını) siler.
+     * Deletes the application with the given {@code fileKey} (and all its revisions).
      *
-     * @param fileKey silinecek uygulamanın anahtarı
-     * @throws IllegalArgumentException {@code fileKey} boş/null ise
+     * @param fileKey the key of the application to be deleted
+     * @throws IllegalArgumentException if {@code fileKey} is empty/null
      */
     public void delete(String fileKey) {
         if (fileKey == null || fileKey.trim().isEmpty()) {

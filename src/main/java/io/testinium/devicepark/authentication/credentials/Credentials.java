@@ -1,20 +1,19 @@
 package io.testinium.devicepark.authentication.credentials;
 
 /**
- * OAuth2 client-credentials akışında kullanılan değiştirilemez (immutable)
- * kimlik bilgisi tutucusu.
+ * Immutable credentials holder used in the OAuth2 client-credentials flow.
  *
- * <p>Yalnızca {@link #of(String, String)} fabrika metodu üzerinden oluşturulabilir;
- * her iki alanın da boş veya {@code null} olmaması garanti edilir.</p>
+ * <p>Can only be created via the {@link #of(String, String)} factory method;
+ * both fields are guaranteed to be non-empty and non-{@code null}.</p>
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * Credentials credentials = Credentials.of("my-client-id", "my-client-secret");
  * </pre>
  *
- * <h2>Güvenlik</h2>
- * <p>{@code clientSecret} hassas bir bilgidir. Loglara, exception mesajlarına
- * veya kalıcı depolamaya yazmaktan kaçının.</p>
+ * <h2>Security</h2>
+ * <p>The {@code clientSecret} is sensitive information. Avoid writing it to
+ * logs, exception messages, or persistent storage.</p>
  *
  * @since 1.0.0
  */

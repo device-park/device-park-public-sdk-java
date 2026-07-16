@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /api/v1/public/pools} istegi icin parametre objesi.
+ * Parameter object for {@code GET /api/v1/public/pools} request.
  */
 public class ListPoolsRequest {
 

@@ -1,13 +1,13 @@
 package io.testinium.devicepark.model.allocation;
 
 /**
- * Yeni bir cihaz tahsisi (allocation) talebinde gönderilen kriterler.
+ * Criteria sent in a new device allocation (allocation) request.
  *
- * <p>En az bir hedefleme parametresi ({@code serial} veya {@code devicePoolId}
- * ya da {@code platform}/{@code platformVersion} kombinasyonu) verilmelidir.
- * Server tarafı bu kriterlere uyan ilk uygun cihazı tahsis eder.</p>
+ * <p>At least one targeting parameter ({@code serial} or {@code devicePoolId}
+ * or a {@code platform}/{@code platformVersion} combination) must be provided.
+ * The server allocates the first suitable device matching these criteria.</p>
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * DeviceAllocationRequest req = DeviceAllocationRequest.builder()
  *         .platform("Android")
@@ -16,9 +16,9 @@ package io.testinium.devicepark.model.allocation;
  *         .build();
  * </pre>
  *
- * <h2>Ööncelik (priority)</h2>
- * <p>{@code 1} (en yüksek) ile {@code 5} (en düşük) arasında olmalıdır;
- * varsayılan {@code 3}'tür.</p>
+ * <h2>Priority</h2>
+ * <p>Must be between {@code 1} (highest) and {@code 5} (lowest);
+ * defaults to {@code 3}.</p>
  *
  * @since 1.0.0
  */

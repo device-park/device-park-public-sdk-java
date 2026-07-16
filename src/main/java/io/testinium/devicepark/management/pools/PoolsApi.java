@@ -13,13 +13,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Cihaz havuzu (device pool) yönetimi için API servisi.
+ * API service for device pool management operations.
  *
- * <p>Pool'lar, mantıksal olarak gruplanmış cihaz kümeleridir; allocation
- * sırasında {@code devicePoolId} ile hedeflenebilirler.</p>
+ * <p>Pools are logically grouped device collections; they can be targeted
+ * by {@code devicePoolId} during allocation.</p>
  *
- * <p>Bu servis instaönce'larını {@link
- * DeviceParkApiClient#pools()} ile elde edin.</p>
+ * <p>Obtain instances of this service via {@link
+ * DeviceParkApiClient#pools()}.</p>
  *
  * <h2>Endpoint Base Path</h2>
  * <p>{@code /management/api/v1/public/pools}</p>
@@ -31,20 +31,20 @@ public final class PoolsApi {
     private final DeviceParkHttpClient deviceParkHttpClient;
 
     /**
-     * Yeni bir {@code PoolsApi} oluşturur.
+     * Creates a new {@code PoolsApi}.
      *
-     * @param deviceParkHttpClient paylaşılan HTTP istemcisi
+     * @param deviceParkHttpClient the shared HTTP client
      */
     public PoolsApi(DeviceParkHttpClient deviceParkHttpClient) {
         this.deviceParkHttpClient = deviceParkHttpClient;
     }
 
     /**
-     * Cihaz havuzlarını sayfalı olarak listeler.
+     * Lists device pools in a paginated manner.
      *
-     * @param request sayfalama/sıralama parametreleri; {@code null} verilirse
-     *                varsayılan değerler kullanılır
-     * @return tek sayfalık {@link Pool} listesi
+     * @param request pagination/sorting parameters; if {@code null},
+     *                default values are used
+     * @return a single page of {@link Pool} list
      */
     public PageDto<Pool> list(ListPoolsRequest request) {
         ListPoolsRequest req = request != null ? request : ListPoolsRequest.builder().build();

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Sayfalanmış API yanıtları için generic wrapper.
+ * Generic wrapper for paginated API responses.
  *
- * <p>Server tarafındaki {@code PageDto<T>} ile birebir eşleşir.</p>
+ * <p>Maps one-to-one to the server-side {@code PageDto<T>}.</p>
  *
  * <pre>
  * {

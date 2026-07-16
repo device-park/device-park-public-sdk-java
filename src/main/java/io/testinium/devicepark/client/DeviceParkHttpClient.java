@@ -33,28 +33,28 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Apache HttpClient 5 tabanlı, OAuth2 entegre HTTP istemcisi.
+ * Apache HttpClient 5 based, OAuth2-integrated HTTP client.
  *
- * <p>Tüm SDK API servislerinin paylaştığı taşıyıcı (transport) katmanıdır.
- * Üst düzey kullanıcılar bu sınıfı doğrudan kullanmaz; {@link
- * DeviceParkApiClient} üzerinden ilgili API servisleri
- * (devices, sessions, vb.) tüketilir.
+ * <p>This is the transport (transport) layer shared by all SDK API services.
+ * End users do not use this class directly; related API services
+ * (devices, sessions, etc.) are consumed via {@link
+ * DeviceParkApiClient}.</p>
  *
- * <h2>Sorumluluklar</h2>
+ * <h2>Responsibilities</h2>
  * <ul>
- *   <li>OAuth2 client-credentials akışı ile token alma ve cache'leme
- *       (60 sn güvenlik payı ile otomatik yenileme)</li>
- *   <li>Her istekte {@code Authorization} header'ını ekleme</li>
- *   <li>JSON, çoklu-parça (multipart), {@code application/octet-stream} stream
- *       ve byte upload desteği</li>
- *   <li>2xx dışındaki HTTP yanıtlarını {@link IOException} olarak fırlatma</li>
+ *   <li>OAuth2 client-credentials flow token acquisition and caching
+ *       (automatic refresh with 60s safety margin)</li>
+ *   <li>Adding {@code Authorization} header to each request</li>
+ *   <li>JSON, multipart, {@code application/octet-stream} stream
+ *       and byte upload support</li>
+ *   <li>Throwing non-2xx HTTP responses as {@link IOException}</li>
  * </ul>
  *
  * <h2>Thread-Safety</h2>
- * <p>Apache HttpClient 5 thread-safe'tir. Token cache'inin güncellenmesi
- * {@code synchronized} ile korunur.</p>
+ * <p>Apache HttpClient 5 is thread-safe. Token cache updates are protected
+ * with {@code synchronized}.</p>
  *
- * <p>Bu sınıf SDK'nın iç (internal) parçasıdır.</p>
+ * <p>This class is an internal part of the SDK.</p>
  *
  * @since 1.0.0
  */
@@ -68,11 +68,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
     private AccessToken cachedToken;
 
     /**
-     * Yeni bir {@code DeviceParkHttpClient} oluşturur.
+     * Creates a new {@code DeviceParkHttpClient}.
      *
-     * @param baseUrl        Device Park sunucu base URL'i
-     * @param timeoutSeconds response/connection-request timeout (saniye); {@code null} ise 20 saniye
-     * @param credentials    OAuth2 kimlik bilgileri (zorunlu)
+     * @param baseUrl        Device Park server base URL
+     * @param timeoutSeconds response/connection-request timeout in seconds; if {@code null}, defaults to 20 seconds
+     * @param credentials    OAuth2 credentials (required)
      */
     public DeviceParkHttpClient(String baseUrl, Integer timeoutSeconds, Credentials credentials) {
         this.baseUrl = baseUrl;

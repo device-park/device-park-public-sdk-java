@@ -7,14 +7,13 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Cihaz tahsisi (allocation) yanıt modeli.
+ * Device allocation (allocation) response model.
  *
- * <p>Server tarafındaki {@code DeviceAllocationResponse} ile birebir eşleşir.
- * Tahsis hemen verilirse {@link #deviceSerial()} dolu olur; aksi halde
- * {@link #position()} ile bekleme sırası bilgisi gelir.</p>
+ * <p>Maps one-to-one to the server-side {@code DeviceAllocationResponse}.
+ * If the allocation is granted immediately, {@link #deviceSerial()} is populated;
+ * otherwise {@link #position()} contains queue position information.</p>
  *
- * <p>Bu sınıf değiştirilemez (immutable). Eşitlik {@link #allocationId()}
- * üzerinden hesaplanır.</p>
+ * <p>This class is immutable. Equality is computed via {@link #allocationId()}.</p>
  *
  * @since 1.0.0
  */
@@ -29,11 +28,11 @@ public final class Allocation {
     /**
      * JSON deserileştirme için kullanılan constructor.
      *
-     * @param allocationId benzersiz tahsis kimliği
-     * @param deviceSerial tahsis hemen verildiyse cihazın seri numarası, aksi halde {@code null}
-     * @param requestId    talep kimliği (idempotency / takip)
-     * @param position     kuyruktaki sıra (1 = en önde); tahsis hemen verildiyse {@code null}
-     * @param expiresAt    tahsisin otomatik düşeceği zaman
+     * @param allocationId unique allocation ID
+     * @param deviceSerial the device's serial number if allocation is granted immediately, otherwise {@code null}
+     * @param requestId    request ID (idempotency / tracking)
+     * @param position     position in queue (1 = first); {@code null} if allocation is granted immediately
+     * @param expiresAt    time when the allocation will automatically expire
      */
     @JsonCreator
     public Allocation(
@@ -50,35 +49,35 @@ public final class Allocation {
     }
 
     /**
-     * @return benzersiz tahsis kimliği
+     * @return unique allocation ID
      */
     public String allocationId() {
         return allocationId;
     }
 
     /**
-     * @return tahsis edilen cihazın seri numarası ({@code null} olabilir, kuyruktaysa)
+     * @return the serial number of the allocated device ({@code null} if queued)
      */
     public String deviceSerial() {
         return deviceSerial;
     }
 
     /**
-     * @return talep kimliği
+     * @return request ID
      */
     public String requestId() {
         return requestId;
     }
 
     /**
-     * @return kuyruktaki sıra; cihaz hemen tahsis edildiyse {@code null}
+     * @return position in queue; {@code null} if device is allocated immediately
      */
     public Integer position() {
         return position;
     }
 
     /**
-     * @return tahsisin otomatik olarak düşeceği zaman
+     * @return time when the allocation will automatically expire
      */
     public Instant expiresAt() {
         return expiresAt;

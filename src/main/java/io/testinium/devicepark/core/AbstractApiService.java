@@ -7,22 +7,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * API servisleri için ortak yardımcılar sağlayan soyut taban sınıf.
+ * Abstract base class providing common helpers for API services.
  *
- * <p>Şu an yalnızca query string oluşturma ve URI birleştirme yardımcısı
- * sağlar. Yeni paylaşılan davranışlar buraya eklenebilir.</p>
+ * <p>Currently provides only query string building and URI concatenation helpers.
+ * New shared behaviors can be added here.</p>
  *
- * <p>Bu sınıf SDK'nın iç (internal) parçasıdır.</p>
+ * <p>This class is an internal part of the SDK.</p>
  *
  * @since 1.0.0
  */
 public abstract class AbstractApiService {
 
     /**
-     * UTF-8 ile {@code application/x-www-form-urlencoded} formatına encode eder.
+     * Encodes to {@code application/x-www-form-urlencoded} format using UTF-8.
      *
-     * @param value encode edilecek ham değer
-     * @return URL-encoded değer
+     * @param value raw value to be encoded
+     * @return URL-encoded value
      */
     private static String urlEncode(String value) {
         try {
@@ -33,16 +33,16 @@ public abstract class AbstractApiService {
     }
 
     /**
-     * Verilen base URL, path ve query parametrelerinden tam {@link URI} oluşturur.
+     * Builds a complete {@link URI} from the given base URL, path, and query parameters.
      *
-     * <p>{@code null} değerli query parametreleri atlanır. Anahtar/değerler
-     * UTF-8 URL-encode edilir. Parametre sırası, sağlanan {@link Map} iterasyon
-     * sırasını korur (bu yüzden {@link LinkedHashMap} önerilir).</p>
+     * <p>Query parameters with {@code null} values are skipped. Keys and values
+     * are UTF-8 URL-encoded. Parameter order follows the {@link Map} iteration
+     * order (hence {@link LinkedHashMap} is recommended).</p>
      *
-     * @param baseurl     scheme + host + opsiyonel port
-     * @param path        endpoint path'i (başında {@code /} olabilir/olmayabilir)
-     * @param queryParams query string anahtar-değer çiftleri; {@code null} olabilir
-     * @return birleştirilmiş tam URI
+     * @param baseurl     scheme + host + optional port
+     * @param path        endpoint path (may or may not start with {@code /})
+     * @param queryParams query string key-value pairs; may be {@code null}
+     * @return combined full URI
      */
     public URI buildUri(String baseurl, String path, Map<String, ?> queryParams) {
         StringBuilder qs = new StringBuilder();

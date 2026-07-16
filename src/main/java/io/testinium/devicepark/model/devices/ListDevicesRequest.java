@@ -9,11 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@code GET /management/api/v1/public/devices} isteği için parametre objesi.
+ * Parameter object for {@code GET /management/api/v1/public/devices} request.
  *
- * <p>Server tarafındaki {@code DevicePaginationRequest} ile birebir eşleşir.
- * Spring controller {@code @ModelAttribute} ile bind eder, bu yüzden
- * setter'lı POJO yapısında tutulur.</p>
+ * <p>Maps one-to-one to the server-side {@code DevicePaginationRequest}.
+ * The Spring controller binds this via {@code @ModelAttribute}, so it is kept
+ * as a POJO with setters.</p>
  *
  * <pre>
  * var req = ListDevicesRequest.builder()

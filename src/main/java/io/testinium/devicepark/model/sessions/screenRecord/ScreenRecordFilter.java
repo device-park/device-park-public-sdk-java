@@ -1,7 +1,7 @@
 package io.testinium.devicepark.model.sessions.screenRecord;
 
 /**
- * Screen-record listeleme isteklerinde kullanılabilecek filter alanları.
+ * Filter fields that can be used in screen-record listing requests.
  *
  * @since 1.0.0
  */

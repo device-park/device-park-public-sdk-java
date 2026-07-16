@@ -46,15 +46,16 @@ Add the following dependency to your `pom.xml`:
 ## Quick Start
 
 ```java
-import com.devicepark.sdk.management.DeviceParkManagementClient;
-import common.model.io.testinium.devicepark.PageDto;
-import devices.model.io.testinium.devicepark.Device;
-import devices.model.io.testinium.devicepark.ListDevicesRequest;
+import io.testinium.devicepark.DeviceParkApiClient;
+import io.testinium.devicepark.authentication.credentials.Credentials;
+import io.testinium.devicepark.model.common.PageDto;
+import io.testinium.devicepark.model.devices.Device;
+import io.testinium.devicepark.model.devices.ListDevicesRequest;
 
 // 1. Build the client
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .endpoint("https://dev-devicepark.testinium.io")
-        .credentials("your-client-id", "your-client-secret")
+DeviceParkApiClient client = DeviceParkApiClient.builder()
+        .url("https://dev-devicepark.testinium.io")
+        .credentials(Credentials.of("your-client-id", "your-client-secret"))
         .build();
 
         // 2. List devices (using default pagination)
@@ -76,12 +77,17 @@ System.out.
         close();
 ```
 
-> **Tip:** `DeviceParkManagementClient` implements `java.io.Closeable`, so you can use it with `try-with-resources`.
+> **Tip:** `DeviceParkApiClient` implements `java.io.Closeable`, so you can use it with `try-with-resources`.
 
 ```java
-try (DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .endpoint("https://dev-devicepark.testinium.io")
-        .credentials("your-client-id", "your-client-secret")
+import io.testinium.devicepark.DeviceParkApiClient;
+import io.testinium.devicepark.authentication.credentials.Credentials;
+import io.testinium.devicepark.model.common.PageDto;
+import io.testinium.devicepark.model.devices.Device;
+
+try(DeviceParkApiClient client = DeviceParkApiClient.builder()
+        .url("https://dev-devicepark.testinium.io")
+        .credentials(Credentials.of("your-client-id", "your-client-secret"))
         .build()) {
 
     PageDto<Device> result = client.devices().list();
@@ -98,8 +104,12 @@ The SDK supports multiple ways to provide credentials. The priority order is as 
 ### 1. Direct Credentials (Recommended)
 
 ```java
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .credentials("your-client-id", "your-client-secret")
+import io.testinium.devicepark.DeviceParkApiClient;
+import io.testinium.devicepark.authentication.credentials.Credentials;
+
+DeviceParkApiClient client = DeviceParkApiClient.builder()
+        .url("https://dev-devicepark.testinium.io")
+        .credentials(Credentials.of("your-client-id", "your-client-secret"))
         .build();
 ```
 
@@ -112,75 +122,26 @@ export DEVICEPARK_CLIENT_ID=your-client-id
 export DEVICEPARK_CLIENT_SECRET=your-client-secret
 ```
 
-```java
-import com.devicepark.sdk.authentication.credentials.EnvironmentVariableCredentialsProvider;
-
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
-        .build();
-```
-
-### 3. Credentials Profile File
-
-Default location: `~/.devicepark/credentials`
-
-```ini
-[default]
-devicepark_client_id     = your-client-id
-devicepark_client_secret = your-client-secret
-
-[staging]
-devicepark_client_id     = staging-client-id
-devicepark_client_secret = staging-client-secret
-```
-
-```java
-import com.devicepark.sdk.authentication.credentials.ProfileCredentialsProvider;
-
-// Default profile
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .credentialsProvider(ProfileCredentialsProvider.create())
-        .build();
-
-// Specific profile
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .credentialsProvider(ProfileCredentialsProvider.builder()
-                .profileName("staging")
-                .build())
-        .build();
-```
-
-You can also override the credentials file path and profile via environment variables:
-
-```bash
-export DEVICEPARK_CREDENTIALS_FILE=/path/to/credentials
-export DEVICEPARK_PROFILE=staging
-```
 
 ---
 
 ## Client Configuration
 
-All configuration options available on `DeviceParkManagementClient.builder()`:
+All configuration options available on `DeviceParkApiClient.builder()`:
 
-| Method                           | Description                                         | Default                                          |
-|----------------------------------|-----------------------------------------------------|--------------------------------------------------|
-| `.endpoint(String)`              | API base URL                                        | `https://dev-devicepark.testinium.io/management` |
-| `.credentials(String, String)`   | Client ID and Client Secret                         | —                                                |
-| `.credentialsProvider(...)`      | Custom `DeviceParkCredentialsProvider` implementation | —                                              |
-| `.timeout(int)`                  | HTTP request timeout in seconds                     | `60`                                             |
-| `.maxRetries(int)`               | Number of retries on failed requests                | `2`                                              |
-| `.addHeader(String, String)`     | Custom HTTP header to be sent with every request    | —                                                |
-| `.logging(LogConfig)`            | SDK logging configuration                           | Silent (no log output)                           |
-| `.httpClient(ApacheHttp5Client)` | Custom Apache HttpClient 5 instance                 | —                                                |
+| Method                      | Description                     | Default |
+|-----------------------------|---------------------------------|---------|
+| `.url(String)`              | API base URL                    | —       |
+| `.credentials(Credentials)` | OAuth2 Credentials object       | —       |
+| `.timeout(int)`             | HTTP request timeout in seconds | `60`    |
 
 ```java
-DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .endpoint("https://dev-devicepark.testinium.io")
-        .credentials("your-client-id", "your-client-secret")
+import io.testinium.devicepark.authentication.credentials.Credentials;
+
+DeviceParkApiClient client = DeviceParkApiClient.builder()
+        .url("https://dev-devicepark.testinium.io")
+        .credentials(Credentials.of("your-client-id", "your-client-secret"))
         .timeout(30)
-        .maxRetries(3)
-        .addHeader("X-Custom-Header", "custom-value")
         .build();
 ```
 
@@ -203,8 +164,8 @@ PageDto<Device> result = client.devices().list();
 Fetches the device list with custom pagination and sorting parameters.
 
 ```java
-import common.model.io.testinium.devicepark.SortDirection;
-import devices.model.io.testinium.devicepark.ListDevicesRequest;
+import io.testinium.devicepark.model.common.SortDirection;
+import io.testinium.devicepark.model.devices.ListDevicesRequest;
 
 PageDto<Device> result = client.devices().list(
         ListDevicesRequest.builder()
@@ -287,24 +248,31 @@ Generic wrapper for paginated API responses.
 
 The SDK reports error conditions using the following exception types:
 
-| Exception             | Description                                                       |
-|-----------------------|-------------------------------------------------------------------|
-| `SdkClientException`  | Client-side errors (invalid configuration, missing credentials)   |
-| `IllegalStateException` | Thrown when a client is built without providing credentials     |
+| Exception                  | Description                                                        |
+|----------------------------|--------------------------------------------------------------------|
+| `IllegalArgumentException` | Thrown when client is built without providing required credentials |
 
 ```java
-import com.devicepark.sdk.core.exception.SdkClientException;
+import io.testinium.devicepark.DeviceParkApiClient;
+import io.testinium.devicepark.authentication.credentials.Credentials;
 
-try (DeviceParkManagementClient client = DeviceParkManagementClient.builder()
-        .endpoint("https://dev-devicepark.testinium.io")
-        .credentials("your-client-id", "your-client-secret")
+try(DeviceParkApiClient client = DeviceParkApiClient.builder()
+        .url("https://dev-devicepark.testinium.io")
+        .credentials(Credentials.of("your-client-id", "your-client-secret"))
         .build()) {
 
     PageDto<Device> result = client.devices().list();
-    // ...
+    result.
 
-} catch (SdkClientException e) {
-    System.err.println("SDK error: " + e.getMessage());
+data().
+
+forEach(System.out::println);
+
+}catch(
+IllegalArgumentException e){
+        System.err.
+
+println("Configuration error: "+e.getMessage());
 } catch (Exception e) {
     System.err.println("Unexpected error: " + e.getMessage());
 }

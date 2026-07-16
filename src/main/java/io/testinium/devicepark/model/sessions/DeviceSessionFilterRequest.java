@@ -3,10 +3,9 @@ package io.testinium.devicepark.model.sessions;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Session listeleme için tek bir filter kaydı.
+ * Single filter record for session listing.
  *
- * <p>Genellikle doğrudan kurulmaz; {@link DeviceSessionRequest.Builder#addFilter}
- * üzerinden eklenir.</p>
+ * <p>Typically not constructed directly; added via {@link DeviceSessionRequest.Builder#addFilter}.</p>
  *
  * @since 1.0.0
  */

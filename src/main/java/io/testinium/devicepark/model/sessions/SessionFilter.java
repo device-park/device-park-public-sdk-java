@@ -1,7 +1,7 @@
 package io.testinium.devicepark.model.sessions;
 
 /**
- * Session listeleme isteklerinde kullanılabilecek filter alanları.
+ * Filter fields that can be used in session listing requests.
  *
  * @since 1.0.0
  */

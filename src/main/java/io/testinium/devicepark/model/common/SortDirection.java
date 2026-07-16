@@ -1,12 +1,14 @@
 package io.testinium.devicepark.model.common;
 
 /**
- * Sıralama yönü. Server tarafındaki {@code SortDirection} enum'ı ile birebir eşleşir.
+ * Sort direction. Maps one-to-one to the server-side {@code SortDirection} enum.
  */
 public enum SortDirection {
-    /** Artan sırada (ascending) */
+    /**
+     * In ascending order
+     */
     ASC,
-    /** Azalan sırada (descending) */
+    /** In descending order */
     DESC
 }
 
