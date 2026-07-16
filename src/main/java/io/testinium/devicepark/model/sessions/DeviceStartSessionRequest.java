@@ -1,13 +1,13 @@
 package io.testinium.devicepark.model.sessions;
 
 /**
- * Yeni bir Appium session başlatümak için gönderilen istek modeli.
+ * Request model sent to start a new Appium session.
  *
- * <p>{@code allocationId} dışındaki alanlar opsiyoneldir; ancak kullanıcı/şirket
- * bağlamını eksiksiz iletümek için {@code userId}, {@code userEmail},
- * {@code companyId}, {@code companyName} gibi alanların doldurulması önerilir.</p>
+ * <p>Fields other than {@code allocationId} are optional; however, it is
+ * recommended to populate fields like {@code userId}, {@code userEmail},
+ * {@code companyId}, {@code companyName} to communicate user/company context completely.</p>
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * DeviceStartSessionRequest req = DeviceStartSessionRequest.builder()
  *         .allocationId(allocation.allocationId())

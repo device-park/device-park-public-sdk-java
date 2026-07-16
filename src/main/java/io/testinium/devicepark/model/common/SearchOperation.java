@@ -1,12 +1,12 @@
 package io.testinium.devicepark.model.common;
 
 /**
- * Filter karşılaştırma operatörleri.
+ * Filter comparison operators.
  *
- * <p>Server tarafındaki {@code SearchOperation} enum'ı ile birebir eşleşir.
- * Tipik kullanım, listeleme uçlarındaki {@code addFilter(...)} çağrılarındadır.</p>
+ * <p>Maps one-to-one to the server-side {@code SearchOperation} enum.
+ * Typical usage is in {@code addFilter(...)} calls on listing endpoints.</p>
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * ListDevicesRequest.builder()
  *     .addFilter(DeviceFilter.PLATFORM, "Android", SearchOperation.EQUAL)

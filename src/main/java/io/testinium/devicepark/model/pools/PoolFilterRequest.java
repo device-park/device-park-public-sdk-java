@@ -3,7 +3,7 @@ package io.testinium.devicepark.model.pools;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Pool listeleme icin tek filtre kaydi.
+ * Single filter record for pool listing.
  */
 public class PoolFilterRequest {
 

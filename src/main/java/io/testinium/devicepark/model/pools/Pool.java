@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * API'den donen pool modelidir.
+ * Pool model returned from the API.
  */
 public final class Pool {
 

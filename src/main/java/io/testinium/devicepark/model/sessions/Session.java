@@ -8,11 +8,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Tahsis edilmiş bir cihaz üzerinde gerçekleşen test oturumunu temsil eden
- * değiştirilemez (immutable) model.
+ * Immutable model representing a test session occurring on an allocated device.
  *
- * <p>Server tarafındaki {@code DeviceSessionResponse} ile birebir eşleşir.
- * Eşitlik {@link #sessionId()} üzerinden hesaplanır.</p>
+ * <p>Maps one-to-one to the server-side {@code DeviceSessionResponse}.
+ * Equality is computed via {@link #sessionId()}.</p>
  *
  * @since 1.0.0
  */

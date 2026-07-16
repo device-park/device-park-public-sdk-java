@@ -3,10 +3,10 @@ package io.testinium.devicepark.model;
 import org.apache.hc.core5.http.HttpStatus;
 
 /**
- * Genel amaçlı SDK yanıtı zarfı (envelope).
+ * General-purpose SDK response envelope.
  *
- * <p>Şu an iç (internal) kullanım için yer tutucu olarak bulunur; ileride
- * standart hata/başarı yanıtı taşımak için genişletilebilir.</p>
+ * <p>Currently serves as a placeholder for internal use; can be extended
+ * in the future to carry standard error/success responses.</p>
  *
  * @since 1.0.0
  */

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * SDK içi paylaşılan, threadüşafe Jackson {@link ObjectMapper} fabrikası.
+ * Shared, thread-safe Jackson {@link ObjectMapper} factory for internal SDK use.
  */
 public final class JsonMapper {
 
@@ -29,7 +29,7 @@ public final class JsonMapper {
         try {
             return INSTANCE.readValue(json, type);
         } catch (Exception e) {
-            throw new RuntimeException("JSON deserialize edilemedi: " + type.getSimpleName(), e);
+            throw new RuntimeException("Failed to deserialize JSON: " + type.getSimpleName(), e);
         }
     }
 
@@ -37,7 +37,7 @@ public final class JsonMapper {
         try {
             return INSTANCE.readValue(json, type);
         } catch (Exception e) {
-            throw new RuntimeException("JSON deserialize edilemedi: " + type.getType(), e);
+            throw new RuntimeException("Failed to deserialize JSON: " + type.getType(), e);
         }
     }
 
@@ -45,7 +45,7 @@ public final class JsonMapper {
         try {
             return INSTANCE.writeValueAsString(value);
         } catch (Exception e) {
-            throw new RuntimeException("JSON serialize edilemedi", e);
+            throw new RuntimeException("Failed to serialize JSON", e);
         }
     }
 }

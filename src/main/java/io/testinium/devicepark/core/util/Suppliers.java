@@ -9,10 +9,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
- * {@link Supplier} için yardımcı (utility) metotlar.
+ * Helper (utility) methods for {@link Supplier}.
  *
- * <p>Bu sınıf SDK'nın iç (internal) parçasıdır; bağımlı uygulamaların
- * doğrudan kullanmaması önerilir.</p>
+ * <p>This class is an internal part of the SDK; applications depending on it
+ * should not use it directly.</p>
  *
  * @since 1.0.0
  */

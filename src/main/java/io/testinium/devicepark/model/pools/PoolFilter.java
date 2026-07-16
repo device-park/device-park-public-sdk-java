@@ -1,7 +1,7 @@
 package io.testinium.devicepark.model.pools;
 
 /**
- * Pool filtre alanlari.
+ * Pool filter fields.
  */
 public enum PoolFilter {
     NAME

@@ -1,10 +1,10 @@
 package io.testinium.devicepark.model.common;
 
 /**
- * Server tarafındaki nested {@code sorting.X} pagination/sorting parametrelerinin
- * paylaşılan modeli. Liste request'lerinde {@code sorting} alanı olarak yer alır.
+ * Shared model for nested {@code sorting.X} pagination/sorting parameters on the server side.
+ * Appears as the {@code sorting} field in list requests.
  *
- * <p>Query string'e şöyle çevrilir:
+ * <p>Translates to the query string as:
  * {@code ?sorting.page=0&sorting.size=20&sorting.sortBy=ID&sorting.direction=DESC}</p>
  */
 public class Sorting {

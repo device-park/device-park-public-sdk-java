@@ -15,16 +15,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Cihaz tahsisi (allocation) işlemlerini sunan API servisi.
+ * API service providing device allocation (allocation) operations.
  *
- * <p>Allocation, bir cihazın test/oturum amacıyla rezerve edilmesidir.
- * Tipik akış: {@link #create(DeviceAllocationRequest) create} → cihaz hazır
- * olduğunda dönen {@link Allocation#allocationId()} ile {@link
- * SessionApi#start session başlat} → iş bitince
- * {@link #delete(String) delete}.</p>
+ * <p>An allocation is the reservation of a device for testing/session purposes.
+ * Typical flow: {@link #create(DeviceAllocationRequest) create} → when device is ready,
+ * use returned {@link Allocation#allocationId()} with {@link
+ * SessionApi#start start session} → delete when done via {@link #delete(String) delete}.</p>
  *
- * <p>Bu servis instance'larını {@link
- * DeviceParkApiClient#allocations()} ile elde edin.</p>
+ * <p>Obtain instances of this service via {@link
+ * DeviceParkApiClient#allocations()}.</p>
  *
  * <h2>Endpoint Base Path</h2>
  * <p>{@code /allocation/api/v2/public/allocations}</p>
@@ -38,24 +37,24 @@ public final class AllocationApi {
     private final DeviceParkHttpClient deviceParkHttpClient;
 
     /**
-     * Yeni bir {@code AllocationApi} oluşturur.
+     * Creates a new {@code AllocationApi}.
      *
-     * <p>Genellikle doğrudan çağrılmaz; {@link
-     * DeviceParkApiClient#allocations()} kullanın.</p>
+     * <p>Usually not called directly; use {@link
+     * DeviceParkApiClient#allocations()}.</p>
      *
-     * @param deviceParkHttpClient paylaşılan HTTP istemcisi
+     * @param deviceParkHttpClient the shared HTTP client
      */
     public AllocationApi(DeviceParkHttpClient deviceParkHttpClient) {
         this.deviceParkHttpClient = deviceParkHttpClient;
     }
 
     /**
-     * Yetkili istemcinin allocation'larını sayfalı olarak listeler.
+     * Lists allocations of the authorized client in a paginated manner.
      *
-     * @param request sayfalama/sıralama parametreleri; {@code null} verilirse
-     *                varsayılan değerler ({@code page=0, size=20, sortBy=ID,
-     *                direction=DESC}) kullanılır
-     * @return tek sayfalık {@link Allocation} listesi
+     * @param request pagination/sorting parameters; if {@code null},
+     *                default values ({@code page=0, size=20, sortBy=ID,
+     *                direction=DESC}) are used
+     * @return a single page of {@link Allocation} list
      */
     public PageDto<Allocation> list(AllocationSearchRequest request) {
         AllocationSearchRequest req = request != null ? request : AllocationSearchRequest.builder().build();
@@ -73,14 +72,14 @@ public final class AllocationApi {
     }
 
     /**
-     * Yeni bir cihaz tahsisi (allocation) oluşturur.
+     * Creates a new device allocation (allocation).
      *
-     * <p>Eğer eşleşen cihaz boştaysa hemen tahsis edilir, aksi halde kuyruğa
-     * alınır ve {@link Allocation#position()} ile bekleme sırası bilgisi döner.</p>
+     * <p>If a matching device is available, it is allocated immediately; otherwise,
+     * it is queued and queue position information is returned via {@link Allocation#position()}.</p>
      *
-     * @param request hedef cihaz/pool kriterleri ve öncelik (zorunlu)
-     * @return oluşturulan tahsis kaydı
-     * @throws IllegalArgumentException {@code request} {@code null} ise
+     * @param request target device/pool criteria and priority (required)
+     * @return the created allocation record
+     * @throws IllegalArgumentException if {@code request} is {@code null}
      */
     public Allocation create(DeviceAllocationRequest request) {
         if (request == null) {
@@ -93,9 +92,9 @@ public final class AllocationApi {
     }
 
     /**
-     * Verilen ID'ye sahip allocation'ı iptal eder/serbest bırakır.
+     * Cancels/releases the allocation with the given ID.
      *
-     * @param allocationId iptal edilecek tahsis kimliği
+     * @param allocationId the allocation ID to be cancelled
      */
     public void delete(String allocationId) {
         deviceParkHttpClient.delete(ALLOCATION_PATH + "/" + allocationId, null);

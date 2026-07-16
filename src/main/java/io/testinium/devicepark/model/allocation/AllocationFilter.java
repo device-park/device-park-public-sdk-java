@@ -1,7 +1,7 @@
 package io.testinium.devicepark.model.allocation;
 
 /**
- * Allocation listeleme isteklerinde kullanılabilecek filter alanları.
+ * Filter fields that can be used in allocation listing requests.
  *
  * @since 1.0.0
  */

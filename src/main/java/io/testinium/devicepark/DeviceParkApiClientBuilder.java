@@ -3,13 +3,13 @@ package io.testinium.devicepark;
 import io.testinium.devicepark.authentication.credentials.Credentials;
 
 /**
- * {@link DeviceParkApiClient} için akıcı (fluent) builder.
+ * Fluent builder for {@link DeviceParkApiClient}.
  *
- * <p>SDK istemcisini oluşturmak için tavsiye edilen tek yol budur. Builder,
- * {@link #build()} sırasında zorunlu alanları doğrular ve geçersiz
- * konfigürasyon varsa {@link IllegalArgumentException} fırlatır.</p>
+ * <p>This is the recommended way to create an SDK client. The builder validates
+ * required fields during {@link #build()} and throws {@link IllegalArgumentException}
+ * if configuration is invalid.</p>
  *
- * <h2>Öörnek</h2>
+ * <h2>Example</h2>
  * <pre>
  * DeviceParkApiClient client = DeviceParkApiClient.builder()
  *         .url("https://device-park.example.com")
@@ -18,13 +18,13 @@ import io.testinium.devicepark.authentication.credentials.Credentials;
  *         .build();
  * </pre>
  *
- * <h2>Konfigürasyon Alanları</h2>
+ * <h2>Configuration Fields</h2>
  * <table border="1">
- *   <caption>Builder alanları</caption>
- *   <tr><th>Alan</th><th>Zorunlu</th><th>Varsayılan</th></tr>
- *   <tr><td>{@code url}</td><td>Evet</td><td>—</td></tr>
- *   <tr><td>{@code credentials}</td><td>Evet</td><td>—</td></tr>
- *   <tr><td>{@code timeout}</td><td>Hayır</td><td>60 saniye</td></tr>
+ *   <caption>Builder fields</caption>
+ *   <tr><th>Field</th><th>Required</th><th>Default</th></tr>
+ *   <tr><td>{@code url}</td><td>Yes</td><td>—</td></tr>
+ *   <tr><td>{@code credentials}</td><td>Yes</td><td>—</td></tr>
+ *   <tr><td>{@code timeout}</td><td>No</td><td>60 seconds</td></tr>
  * </table>
  *
  * @see DeviceParkApiClient
@@ -33,21 +33,23 @@ import io.testinium.devicepark.authentication.credentials.Credentials;
 public class DeviceParkApiClientBuilder {
 
     /**
-     * Saniye cinsinden HTTP istek timeout'u.
+     * HTTP request timeout in seconds.
      */
     private Integer timeout = 60;
 
-    /** OAuth2 client-credentials kimlik bilgileri. */
+    /**
+     * OAuth2 client-credentials credentials.
+     */
     private Credentials credentials;
 
-    /** Device Park sunucu base URL'i. */
+    /** Device Park server base URL. */
     private String url;
 
     /**
-     * OAuth2 kimlik bilgilerini ayarlar.
+     * Sets the OAuth2 credentials.
      *
-     * @param credentials {@link Credentials#of(String, String)} ile oluşturulmuş kimlik bilgisi
-     * @return aynı builder instaönce'ı (chaining için)
+     * @param credentials credentials created via {@link Credentials#of(String, String)}
+     * @return the same builder instance (for chaining)
      */
     public DeviceParkApiClientBuilder credentials(Credentials credentials) {
         this.credentials = credentials;
@@ -55,10 +57,10 @@ public class DeviceParkApiClientBuilder {
     }
 
     /**
-     * Device Park sunucu base URL'ini ayarlar.
+     * Sets the Device Park server base URL.
      *
-     * @param url base URL (örn. {@code https://device-park.example.com})
-     * @return aynı builder instaönce'ı (chaining için)
+     * @param url base URL (e.g., {@code https://device-park.example.com})
+     * @return the same builder instance (for chaining)
      */
     public DeviceParkApiClientBuilder url(String url) {
         this.url = url;
@@ -66,10 +68,10 @@ public class DeviceParkApiClientBuilder {
     }
 
     /**
-     * HTTP istekleri için saniye cinsinden response/connection timeout'u ayarlar.
+     * Sets the HTTP request timeout in seconds for response/connection timeout.
      *
-     * @param timeout saniye; {@code null} ise varsayılan değer kullanılır
-     * @return aynı builder instaönce'ı (chaining için)
+     * @param timeout timeout in seconds; if {@code null}, the default value is used
+     * @return the same builder instance (for chaining)
      */
     public DeviceParkApiClientBuilder timeout(Integer timeout) {
         this.timeout = timeout;
@@ -77,10 +79,10 @@ public class DeviceParkApiClientBuilder {
     }
 
     /**
-     * Zorunlu alanların doldurulmuş olduğunu doğrular.
+     * Validates that required fields are filled.
      *
-     * @throws IllegalArgumentException {@code url} veya {@code credentials}
-     *         eksik/geçersizse
+     * @throws IllegalArgumentException if {@code url} or {@code credentials}
+     *         are missing or invalid
      */
     protected void validateConfiguration() {
         if (this.url == null || this.url.trim().isEmpty()) {
@@ -94,10 +96,10 @@ public class DeviceParkApiClientBuilder {
     }
 
     /**
-     * Konfigürasyonu doğrular ve yeni bir {@link DeviceParkApiClient} üretir.
+     * Validates configuration and produces a new {@link DeviceParkApiClient}.
      *
-     * @return kullanıma hazır SDK istemcisi
-     * @throws IllegalArgumentException konfigürasyon eksik/geçersizse
+     * @return a ready-to-use SDK client
+     * @throws IllegalArgumentException if configuration is missing or invalid
      */
     public DeviceParkApiClient build() {
         validateConfiguration();

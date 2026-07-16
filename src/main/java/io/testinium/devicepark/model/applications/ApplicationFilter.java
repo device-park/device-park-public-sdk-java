@@ -1,25 +1,25 @@
 package io.testinium.devicepark.model.applications;
 
 /**
- * Application listeleme isteklerinde kullanılabilecek filter alanları.
+ * Filter fields that can be used in application listing requests.
  *
  * @since 1.0.0
  */
 public enum ApplicationFilter {
     /**
-     * {@code fileKey} üzerinden tam eşleşme.
+     * Exact match on {@code fileKey}.
      */
     FILE_KEY("fileKey", String.class),
     /**
-     * {@code filePath} üzerinden eşleşme.
+     * Match on {@code filePath}.
      */
     FILE_PATH("filePath", String.class),
     /**
-     * {@code version} üzerinden eşleşme.
+     * Match on {@code version}.
      */
     VERSION("version", String.class),
     /**
-     * {@code revision} üzerinden sayısal karşılaştırma.
+     * Numeric comparison on {@code revision}.
      */
     REVISION("revision", Long.class);
 
@@ -32,14 +32,14 @@ public enum ApplicationFilter {
     }
 
     /**
-     * @return server tarafındaki DB alan adı
+     * @return the DB field name on the server side
      */
     public String getDbField() {
         return dbField;
     }
 
     /**
-     * @return bu alan için beklenen değer tipi
+     * @return the expected value type for this field
      */
     public Class<?> getAClass() {
         return aClass;

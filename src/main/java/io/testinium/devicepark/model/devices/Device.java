@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * Device Park Management API'sinden dönen cihaz modeli (external müşteri view'ı).
+ * Device model returned from the Device Park Management API (external customer view).
  *
- * <p>Server tarafındaki {@code ExternalDeviceResponse} ile birebir eşleşir.</p>
+ * <p>Maps one-to-one to the server-side {@code ExternalDeviceResponse}.</p>
  */
 public final class Device {
 

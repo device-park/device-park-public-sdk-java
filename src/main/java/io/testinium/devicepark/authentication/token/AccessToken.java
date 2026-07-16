@@ -7,9 +7,9 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * OAuth2 token endpoint'inden dönen access token. Snake_case JSON ile uyumlu.
+ * Access token returned from the OAuth2 token endpoint. Compatible with snake_case JSON.
  *
- * <p>Standart OAuth2 alanları: {@code access_token}, {@code token_type},
+ * <p>Standard OAuth2 fields: {@code access_token}, {@code token_type},
  * {@code expires_in}, {@code refresh_token}, {@code scope}.</p>
  */
 public final class AccessToken {

@@ -16,15 +16,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Test oturumu (session) işlemleri için API servisi.
+ * API service for test session (session) operations.
  *
- * <p>Bir session, tahsis edilmiş bir cihaz üzerinde Appium komutları
- * çalıştırılan etkileşim aralığını temsil eder. Bu servis ile session
- * başlatabilir, durdurabilir, listeleyebilir, Appium loglarını ve ekran
- * kayıtlarını alabilirsiniz.</p>
+ * <p>A session represents an interaction range in which Appium commands
+ * run on an allocated device. With this service, you can start, stop, list sessions,
+ * and retrieve Appium logs and screen records.</p>
  *
- * <p>Bu servis instaönce'larını {@link
- * DeviceParkApiClient#sessions()} ile elde edin.</p>
+ * <p>Obtain instances of this service via {@link
+ * DeviceParkApiClient#sessions()}.</p>
  *
  * <h2>Endpoint Base Path</h2>
  * <ul>

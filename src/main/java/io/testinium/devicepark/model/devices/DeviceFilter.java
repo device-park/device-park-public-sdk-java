@@ -1,7 +1,7 @@
 package io.testinium.devicepark.model.devices;
 
 /**
- * Cihaz listeleme isteklerinde kullanılabilecek filter alanları.
+ * Filter fields that can be used in device listing requests.
  *
  * @since 1.0.0
  */

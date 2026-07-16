@@ -7,14 +7,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Bir session sırasında alınan ekran kaydını (screen record) temsil eden
- * değiştirilemez (immutable) model.
+ * Immutable model representing a screen record (screen recording) taken during a session.
  *
- * <p>Server tarafındaki {@code ExternalScreenRecordResponse} ile birebir
- * eşleşir. {@link #downloadUrl()} önceden imzalanmış bir URL döndürür ve
- * belirli bir süre sonra geçersiz olabilir.</p>
+ * <p>Maps one-to-one to the server-side {@code ExternalScreenRecordResponse}. {@link #downloadUrl()}
+ * returns a pre-signed URL and may become invalid after a certain period.</p>
  *
- * <p>Eşitlik {@link #fileKey()} üzerinden hesaplanır.</p>
+ * <p>Equality is computed via {@link #fileKey()}.</p>
  *
  * @since 1.0.0
  */

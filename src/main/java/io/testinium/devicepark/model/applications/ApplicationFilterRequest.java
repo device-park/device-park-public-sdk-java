@@ -3,10 +3,9 @@ package io.testinium.devicepark.model.applications;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Application listeleme için tek bir filter kaydı.
+ * Single filter record for application listing.
  *
- * <p>Genellikle doğrudan kurulmaz; {@link ApplicationPaginationRequest.Builder#addFilter}
- * üzerinden eklenir.</p>
+ * <p>Typically not constructed directly; added via {@link ApplicationPaginationRequest.Builder#addFilter}.</p>
  *
  * @since 1.0.0
  */
@@ -17,7 +16,7 @@ public class ApplicationFilterRequest {
     private SearchOperation operation;
 
     /**
-     * @return filter alanı
+     * @return the filter field
      */
     public ApplicationFilter getKey() {
         return key;

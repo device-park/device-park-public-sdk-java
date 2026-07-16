@@ -3,10 +3,9 @@ package io.testinium.devicepark.model.allocation;
 import io.testinium.devicepark.model.common.SearchOperation;
 
 /**
- * Allocation listeleme için tek bir filter kaydı.
+ * Single filter record for allocation listing.
  *
- * <p>Genellikle doğrudan kurulmaz; {@link AllocationSearchRequest.Builder#addFilter}
- * üzerinden eklenir.</p>
+ * <p>Typically not constructed directly; added via {@link AllocationSearchRequest.Builder#addFilter}.</p>
  *
  * @since 1.0.0
  */
