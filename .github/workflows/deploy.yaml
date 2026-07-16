@@ -54,4 +54,4 @@ jobs:
         run: mvn -B clean verify
 
       - name: Publish
-        run: mvn -B deploy
+        run: mvn -B -X deploy
