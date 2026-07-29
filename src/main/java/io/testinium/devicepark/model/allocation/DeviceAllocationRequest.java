@@ -31,6 +31,7 @@ public class DeviceAllocationRequest {
     private String platformVersion;
     private String devicePoolId;
     private Integer priority = 3;
+    private RemoveAppSelection removeApps = RemoveAppSelection.NO_REMOVE;
 
     public String getSerial() {
         return serial;
@@ -95,6 +96,18 @@ public class DeviceAllocationRequest {
         this.priority = priority;
     }
 
+    public RemoveAppSelection getRemoveApps() {
+        return removeApps;
+    }
+
+    public void setRemoveApps(RemoveAppSelection removeApps) {
+        if (removeApps == null) {
+            this.removeApps = RemoveAppSelection.NO_REMOVE;
+            return;
+        }
+        this.removeApps = removeApps;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -134,6 +147,11 @@ public class DeviceAllocationRequest {
 
         public Builder priority(Integer priority) {
             req.setPriority(priority);
+            return this;
+        }
+
+        public Builder removeApps(RemoveAppSelection removeApps) {
+            req.setRemoveApps(removeApps);
             return this;
         }
 
