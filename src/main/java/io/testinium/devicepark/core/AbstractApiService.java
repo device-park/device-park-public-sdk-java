@@ -1,8 +1,10 @@
 package io.testinium.devicepark.core;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,6 +41,9 @@ public abstract class AbstractApiService {
      * are UTF-8 URL-encoded. Parameter order follows the {@link Map} iteration
      * order (hence {@link LinkedHashMap} is recommended).</p>
      *
+     * <p>{@link Collection} and array values are expanded as repeated keys
+     * (e.g. {@code serials=a&amp;serials=b}).</p>
+     *
      * @param baseurl     scheme + host + optional port
      * @param path        endpoint path (may or may not start with {@code /})
      * @param queryParams query string key-value pairs; may be {@code null}
@@ -48,16 +53,36 @@ public abstract class AbstractApiService {
         StringBuilder qs = new StringBuilder();
         if (queryParams != null) {
             for (Map.Entry<String, ?> e : new LinkedHashMap<>(queryParams).entrySet()) {
-                if (e.getValue() == null) {
+                Object value = e.getValue();
+                if (value == null) {
                     continue;
                 }
-                if (qs.length() > 0) {
-                    qs.append('&');
+                String key = e.getKey();
+                if (value instanceof Collection) {
+                    for (Object item : (Collection<?>) value) {
+                        appendQueryParam(qs, key, item);
+                    }
+                } else if (value.getClass().isArray()) {
+                    int length = Array.getLength(value);
+                    for (int i = 0; i < length; i++) {
+                        appendQueryParam(qs, key, Array.get(value, i));
+                    }
+                } else {
+                    appendQueryParam(qs, key, value);
                 }
-                qs.append(urlEncode(e.getKey())).append('=').append(urlEncode(e.getValue().toString()));
             }
         }
         String full = baseurl + path + (qs.length() > 0 ? "?" + qs : "");
         return URI.create(full);
+    }
+
+    private static void appendQueryParam(StringBuilder qs, String key, Object value) {
+        if (value == null) {
+            return;
+        }
+        if (qs.length() > 0) {
+            qs.append('&');
+        }
+        qs.append(urlEncode(key)).append('=').append(urlEncode(value.toString()));
     }
 }
