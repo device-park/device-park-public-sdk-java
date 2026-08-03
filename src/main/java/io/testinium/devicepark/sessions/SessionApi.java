@@ -11,6 +11,7 @@ import io.testinium.devicepark.model.sessions.DeviceSessionRequest;
 import io.testinium.devicepark.model.sessions.DeviceStartSessionRequest;
 import io.testinium.devicepark.model.sessions.Session;
 import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecord;
+import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecordFilterRequest;
 import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecordPaginationRequest;
 
 import java.util.LinkedHashMap;
@@ -105,12 +106,26 @@ public final class SessionApi {
         }
         ScreenRecordPaginationRequest req = request != null ? request : ScreenRecordPaginationRequest.builder().build();
         Sorting s = req.getSorting();
+        List<ScreenRecordFilterRequest> filters = req.getFilters();
 
         Map<String, Object> qs = new LinkedHashMap<>();
         qs.put("sorting.page", s.getPage());
         qs.put("sorting.size", s.getSize());
         qs.put("sorting.sortBy", s.getSortBy());
         qs.put("sorting.direction", s.getDirection() != null ? s.getDirection().name() : null);
+
+        if (filters != null) {
+            int filterIndex = 0;
+            for (ScreenRecordFilterRequest filter : filters) {
+                if (filter == null) {
+                    continue;
+                }
+                qs.put("filters[" + filterIndex + "].key", filter.getKey());
+                qs.put("filters[" + filterIndex + "].value", filter.getValue());
+                qs.put("filters[" + filterIndex + "].operation", filter.getOperation());
+                filterIndex++;
+            }
+        }
 
         String response = deviceParkHttpClient.get(SCREEN_RECORD_PATH + "/" + sessionId + "/screen-records", qs);
         return JsonMapper.fromJson(response.getBytes(), new TypeReference<PageDto<ScreenRecord>>() {
