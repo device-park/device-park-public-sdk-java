@@ -151,8 +151,22 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      * @throws RuntimeException ağ hatası veya 2xx olmayan yanıt durumunda
      */
     public String post(String path, String body, Map<String, String> headers) {
+        return post(path, body, null, headers);
+    }
+
+    /**
+     * Query parametreli, JSON gövdeli {@code POST} isteği yapar.
+     *
+     * @param path        endpoint path'i
+     * @param body        JSON-serialize edilmiş istek gövdesi ({@code null} ise body yollanmaz)
+     * @param queryParams URL-encode edilecek query parametreleri ({@code null} olabilir)
+     * @param headers     ek HTTP header'ları ({@code null} olabilir)
+     * @return ham response gövdesi
+     * @throws RuntimeException ağ hatası veya 2xx olmayan yanıt durumunda
+     */
+    public String post(String path, String body, Map<String, ?> queryParams, Map<String, String> headers) {
         try {
-            HttpPost request = new HttpPost(buildUrl(path));
+            HttpPost request = new HttpPost(buildUri(baseUrl, path, queryParams));
             addHeaders(request, headers);
             if (body != null) {
                 request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
@@ -194,8 +208,21 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      * @throws RuntimeException ağ hatası veya 2xx olmayan yanıt durumunda
      */
     public String delete(String path, Map<String, String> headers) {
+        return delete(path, null, headers);
+    }
+
+    /**
+     * Query parametreli {@code DELETE} isteği yapar.
+     *
+     * @param path        endpoint path'i
+     * @param queryParams URL-encode edilecek query parametreleri ({@code null} olabilir)
+     * @param headers     ek HTTP header'ları ({@code null} olabilir)
+     * @return ham response gövdesi (genelde boş)
+     * @throws RuntimeException ağ hatası veya 2xx olmayan yanıt durumunda
+     */
+    public String delete(String path, Map<String, ?> queryParams, Map<String, String> headers) {
         try {
-            HttpDelete request = new HttpDelete(buildUrl(path));
+            HttpDelete request = new HttpDelete(buildUri(baseUrl, path, queryParams));
             addHeaders(request, headers);
             return execute(request);
         } catch (IOException e) {
