@@ -54,12 +54,27 @@ public final class PoolsApi {
     public PageDto<Pool> list(ListPoolsRequest request) {
         ListPoolsRequest req = request != null ? request : ListPoolsRequest.builder().build();
         Sorting s = req.getSorting();
+        List<PoolFilterRequest> filters = req.getFilters();
 
         Map<String, Object> qs = new LinkedHashMap<>();
         qs.put("sorting.page", s.getPage());
         qs.put("sorting.size", s.getSize());
         qs.put("sorting.sortBy", s.getSortBy());
         qs.put("sorting.direction", s.getDirection() != null ? s.getDirection().name() : null);
+
+
+        if (filters != null) {
+            int filterIndex = 0;
+            for (PoolFilterRequest filter : filters) {
+                if (filter == null) {
+                    continue;
+                }
+                qs.put("filters[" + filterIndex + "].key", filter.getKey());
+                qs.put("filters[" + filterIndex + "].value", filter.getValue());
+                qs.put("filters[" + filterIndex + "].operation", filter.getOperation());
+                filterIndex++;
+            }
+        }
 
         String response = deviceParkHttpClient.get("/management/api/v1/public/pools", qs);
         return JsonMapper.fromJson(response.getBytes(), new TypeReference<PageDto<Pool>>() {

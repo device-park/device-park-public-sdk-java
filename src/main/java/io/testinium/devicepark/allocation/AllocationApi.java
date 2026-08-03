@@ -5,6 +5,7 @@ import io.testinium.devicepark.DeviceParkApiClient;
 import io.testinium.devicepark.client.DeviceParkHttpClient;
 import io.testinium.devicepark.core.json.JsonMapper;
 import io.testinium.devicepark.model.allocation.Allocation;
+import io.testinium.devicepark.model.allocation.AllocationFilterRequest;
 import io.testinium.devicepark.model.allocation.AllocationSearchRequest;
 import io.testinium.devicepark.model.allocation.DeviceAllocationRequest;
 import io.testinium.devicepark.model.common.PageDto;
@@ -12,6 +13,7 @@ import io.testinium.devicepark.model.common.Sorting;
 import io.testinium.devicepark.sessions.SessionApi;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,12 +61,26 @@ public final class AllocationApi {
     public PageDto<Allocation> list(AllocationSearchRequest request) {
         AllocationSearchRequest req = request != null ? request : AllocationSearchRequest.builder().build();
         Sorting s = req.getSorting();
+        List<AllocationFilterRequest> filters = req.getFilters();
 
         Map<String, Object> qs = new LinkedHashMap<>();
         qs.put("sorting.page", s.getPage());
         qs.put("sorting.size", s.getSize());
         qs.put("sorting.sortBy", s.getSortBy());
         qs.put("sorting.direction", s.getDirection() != null ? s.getDirection().name() : null);
+
+        if (filters != null) {
+            int filterIndex = 0;
+            for (AllocationFilterRequest filter : filters) {
+                if (filter == null) {
+                    continue;
+                }
+                qs.put("filters[" + filterIndex + "].key", filter.getKey());
+                qs.put("filters[" + filterIndex + "].value", filter.getValue());
+                qs.put("filters[" + filterIndex + "].operation", filter.getOperation());
+                filterIndex++;
+            }
+        }
 
         String response = deviceParkHttpClient.get(ALLOCATION_PATH, qs);
         return JsonMapper.fromJson(response.getBytes(), new TypeReference<PageDto<Allocation>>() {
