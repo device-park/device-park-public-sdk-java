@@ -12,13 +12,16 @@ public final class Pool {
 
     private final String id;
     private final String name;
+    private final Boolean isDefault;
 
     @JsonCreator
     public Pool(
             @JsonProperty("id") String id,
-            @JsonProperty("name") String name) {
+            @JsonProperty("name") String name,
+            @JsonProperty("isDefault") Boolean isDefault) {
         this.id = id;
         this.name = name;
+        this.isDefault = isDefault;
     }
 
     public String id() {
@@ -29,22 +32,27 @@ public final class Pool {
         return name;
     }
 
+    public Boolean isDefault() {
+        return isDefault;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Pool)) return false;
         Pool pool = (Pool) o;
-        return Objects.equals(id, pool.id) && Objects.equals(name, pool.name);
+        return Objects.equals(id, pool.id)
+                && Objects.equals(name, pool.name)
+                && Objects.equals(isDefault, pool.isDefault);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, isDefault);
     }
 
     @Override
     public String toString() {
-        return "Pool(id=" + id + ", name=" + name + ")";
+        return "Pool(id=" + id + ", name=" + name + ", isDefault=" + isDefault + ")";
     }
 }
-
