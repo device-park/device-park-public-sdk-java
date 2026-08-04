@@ -104,8 +104,8 @@ public class DeviceParkApiClient implements Closeable {
      */
     public DeviceParkApiClient(String uri, Integer timeout, Credentials credentials) {
         this.httpClient = new DeviceParkHttpClient(uri, timeout, credentials);
-        this.devices = Suppliers.memoize(() -> new DevicesApi(this.httpClient));
         this.pools = Suppliers.memoize(() -> new PoolsApi(this.httpClient));
+        this.devices = Suppliers.memoize(() -> new DevicesApi(this.httpClient, pools.get()));
         this.allocations = Suppliers.memoize(() -> new AllocationApi(this.httpClient));
         this.sessions = Suppliers.memoize(() -> new SessionApi(this.httpClient));
         this.applications = Suppliers.memoize(() -> new ApplicationApi(this.httpClient));

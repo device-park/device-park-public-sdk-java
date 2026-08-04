@@ -84,17 +84,16 @@ public final class PoolsApi {
         });
     }
 
-
     /**
-     * Lists only default device pools in a paginated manner.
+     * Returns the default device pool for the authenticated client.
      *
-     * @param request pagination/sorting parameters; if {@code null},
-     *                default values are used
-     * @return a single page of default {@link Pool} list (where {@code isDefault} is {@code true})
+     * <p>Queries pools with {@code isDefault = true} and returns the first match.</p>
+     *
+     * @return the default {@link Pool}
+     * @throws IllegalStateException if no default pool exists
      */
-    public PageDto<Pool> listByDefaultPool(ListPoolsRequest request) {
-
-        ListPoolsRequest req = request != null ? request : ListPoolsRequest.builder().build();
+    public Pool getDefaultPool() {
+        ListPoolsRequest req = ListPoolsRequest.builder().build();
         Sorting s = req.getSorting();
 
         List<PoolFilterRequest> filters = new ArrayList<>();
@@ -119,8 +118,12 @@ public final class PoolsApi {
         }
 
         String response = deviceParkHttpClient.get(POOLS_PATH, qs);
-        return JsonMapper.fromJson(response.getBytes(), new TypeReference<PageDto<Pool>>() {
+        PageDto<Pool> page = JsonMapper.fromJson(response.getBytes(), new TypeReference<PageDto<Pool>>() {
         });
+        if (page == null || page.isEmpty()) {
+            throw new IllegalStateException("Default pool not found");
+        }
+        return page.data().get(0);
     }
 
     /**
