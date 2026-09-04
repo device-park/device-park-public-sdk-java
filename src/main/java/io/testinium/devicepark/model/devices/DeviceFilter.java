@@ -9,10 +9,10 @@ public enum DeviceFilter {
     POOL_ID("devicePools.id", String.class),
     SERIAL_NUMBER("serial", String.class),
     MARKETING_NAME("marketName", String.class),
-    MENUFACTURER("manufacturer", String.class),
+    MANUFACTURER("manufacturer", String.class),
     MODEL_NAME("model", String.class),
     PLATFORM("platform", String.class),
-    OS_VERSION("osVersion", String.class),
+    PLATFORM_VERSION("platformVersion", String.class),
     TAGS("tags.name", String.class),
     STATE("deviceStates.state", String.class);
 
