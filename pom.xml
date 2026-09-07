@@ -6,7 +6,7 @@
 
     <groupId>io.testinium.devicepark</groupId>
     <artifactId>device-park-public-sdk</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
 
     <name>Device Park Public SDK</name>
