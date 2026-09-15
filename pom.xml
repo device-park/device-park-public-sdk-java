@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>8</maven.compiler.release>
         <!-- PROD version: you normally update only this <releaseRevision> value -->
-        <releaseRevision>1.1.1</releaseRevision>
+        <releaseRevision>1.1.2</releaseRevision>
         <revision>${releaseRevision}</revision>
     </properties>
 
