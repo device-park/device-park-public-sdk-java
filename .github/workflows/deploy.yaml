@@ -44,4 +44,4 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Publish
-        run: mvn -B clean deploy
+        run: mvn -B clean deploy -Pprod
