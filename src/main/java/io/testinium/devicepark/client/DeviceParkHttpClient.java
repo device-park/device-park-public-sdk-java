@@ -44,6 +44,8 @@ import java.util.Optional;
  * <ul>
  *   <li>OAuth2 client-credentials flow token acquisition and caching
  *       (automatic refresh with 60s safety margin)</li>
+ *   <li>Invalidating the cached token and retrying once on HTTP 401
+ *       (covers server-side revocation while {@code expires_in} has not elapsed)</li>
  *   <li>Adding {@code Authorization} header to each request</li>
  *   <li>JSON, multipart, {@code application/octet-stream} stream
  *       and byte upload support</li>
@@ -96,9 +98,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String get(String path) {
         try {
-            HttpGet request = new HttpGet(buildUrl(path));
-            addHeaders(request, null);
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpGet request = new HttpGet(buildUrl(path));
+                addHeaders(request, null);
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
@@ -114,9 +118,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String get(String path, Map<String, ?> queryParams) {
         try {
-            HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
-            addHeaders(request, null);
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
+                addHeaders(request, null);
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
@@ -133,9 +139,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String get(String path, Map<String, ?> queryParams, Map<String, String> headers) {
         try {
-            HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
-            addHeaders(request, headers);
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpGet request = new HttpGet(buildUri(baseUrl, path, queryParams));
+                addHeaders(request, headers);
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute GET request for path: " + path, e);
         }
@@ -166,12 +174,14 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String post(String path, String body, Map<String, ?> queryParams, Map<String, String> headers) {
         try {
-            HttpPost request = new HttpPost(buildUri(baseUrl, path, queryParams));
-            addHeaders(request, headers);
-            if (body != null) {
-                request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
-            }
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpPost request = new HttpPost(buildUri(baseUrl, path, queryParams));
+                addHeaders(request, headers);
+                if (body != null) {
+                    request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+                }
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute POST request for path: " + path, e);
         }
@@ -188,12 +198,14 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String put(String path, String body, Map<String, String> headers) {
         try {
-            HttpPut request = new HttpPut(buildUrl(path));
-            addHeaders(request, headers);
-            if (body != null) {
-                request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
-            }
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpPut request = new HttpPut(buildUrl(path));
+                addHeaders(request, headers);
+                if (body != null) {
+                    request.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+                }
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute PUT request for path: " + path, e);
         }
@@ -222,9 +234,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String delete(String path, Map<String, ?> queryParams, Map<String, String> headers) {
         try {
-            HttpDelete request = new HttpDelete(buildUri(baseUrl, path, queryParams));
-            addHeaders(request, headers);
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpDelete request = new HttpDelete(buildUri(baseUrl, path, queryParams));
+                addHeaders(request, headers);
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute DELETE request for path: " + path, e);
         }
@@ -244,21 +258,23 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
     public String postMultipart(String path, File file, String filePartName, Map<String, String> formFields,
                                 Map<String, String> headers) {
         try {
-            HttpPost request = new HttpPost(buildUrl(path));
-            addHeaders(request, headers);
-            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            String partName = filePartName != null ? filePartName : "file";
-            builder.addBinaryBody(partName, file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
-            if (formFields != null) {
-                formFields.forEach((k, v) -> {
-                    if (v != null) {
-                        builder.addTextBody(k, v, ContentType.TEXT_PLAIN.withCharset(StandardCharsets.UTF_8));
-                    }
-                });
-            }
-            HttpEntity entity = builder.build();
-            request.setEntity(entity);
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpPost request = new HttpPost(buildUrl(path));
+                addHeaders(request, headers);
+                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                String partName = filePartName != null ? filePartName : "file";
+                builder.addBinaryBody(partName, file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
+                if (formFields != null) {
+                    formFields.forEach((k, v) -> {
+                        if (v != null) {
+                            builder.addTextBody(k, v, ContentType.TEXT_PLAIN.withCharset(StandardCharsets.UTF_8));
+                        }
+                    });
+                }
+                HttpEntity entity = builder.build();
+                request.setEntity(entity);
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute multipart POST request for path: " + path, e);
         }
@@ -277,12 +293,15 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String postStream(String path, InputStream body, Map<String, String> headers) {
         try {
-            HttpPost request = new HttpPost(buildUrl(path));
-            addHeaders(request, headers);
-            if (body != null) {
-                request.setEntity(new InputStreamEntity(body, -1, ContentType.APPLICATION_OCTET_STREAM));
-            }
-            return execute(request);
+            // Stream may already be consumed after a failed attempt; invalidate on 401 so the next call gets a fresh token.
+            return executeWithTokenRetry(() -> {
+                HttpPost request = new HttpPost(buildUrl(path));
+                addHeaders(request, headers);
+                if (body != null) {
+                    request.setEntity(new InputStreamEntity(body, -1, ContentType.APPLICATION_OCTET_STREAM));
+                }
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute octet-stream POST request for path: " + path, e);
         }
@@ -299,12 +318,14 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public String postBytes(String path, byte[] body, Map<String, String> headers) {
         try {
-            HttpPost request = new HttpPost(buildUrl(path));
-            addHeaders(request, headers);
-            if (body != null) {
-                request.setEntity(new ByteArrayEntity(body, ContentType.APPLICATION_OCTET_STREAM));
-            }
-            return execute(request);
+            return executeWithTokenRetry(() -> {
+                HttpPost request = new HttpPost(buildUrl(path));
+                addHeaders(request, headers);
+                if (body != null) {
+                    request.setEntity(new ByteArrayEntity(body, ContentType.APPLICATION_OCTET_STREAM));
+                }
+                return execute(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute octet-stream POST request for path: " + path, e);
         }
@@ -319,9 +340,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
      */
     public byte[] getBytes(String path) {
         try {
-            HttpGet request = new HttpGet(buildUrl(path));
-            addHeaders(request, null);
-            return executeBytes(request);
+            return executeWithTokenRetry(() -> {
+                HttpGet request = new HttpGet(buildUrl(path));
+                addHeaders(request, null);
+                return executeBytes(request);
+            });
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute GET (bytes) request for path: " + path, e);
         }
@@ -333,10 +356,12 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
             byte[] body = response.getEntity() != null ? EntityUtils.toByteArray(response.getEntity()) : new byte[0];
             if (status >= 200 && status < 300) {
                 return body;
-            } else {
-                throw new IOException("HTTP Request Failed with status: " + status
-                        + " body: " + new String(body, StandardCharsets.UTF_8));
             }
+            if (status == 401) {
+                throw new UnauthorizedHttpException(status, new String(body, StandardCharsets.UTF_8));
+            }
+            throw new IOException("HTTP Request Failed with status: " + status
+                    + " body: " + new String(body, StandardCharsets.UTF_8));
         });
     }
 
@@ -346,9 +371,11 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
             String responseBody = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : null;
             if (status >= 200 && status < 300) {
                 return responseBody;
-            } else {
-                throw new IOException("HTTP Request Failed with status: " + status + " body: " + responseBody);
             }
+            if (status == 401) {
+                throw new UnauthorizedHttpException(status, responseBody);
+            }
+            throw new IOException("HTTP Request Failed with status: " + status + " body: " + responseBody);
         });
     }
 
@@ -362,6 +389,28 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
             return baseUrl + "/" + path;
         }
         return baseUrl + path;
+    }
+
+    @FunctionalInterface
+    private interface IoSupplier<T> {
+        T get() throws IOException;
+    }
+
+    /**
+     * Runs an authenticated call; on HTTP 401 invalidates the cached token and retries once
+     * with a freshly built request (new Authorization header).
+     */
+    private <T> T executeWithTokenRetry(IoSupplier<T> action) throws IOException {
+        try {
+            return action.get();
+        } catch (UnauthorizedHttpException e) {
+            invalidateCachedToken();
+            return action.get();
+        }
+    }
+
+    private synchronized void invalidateCachedToken() {
+        cachedToken = null;
     }
 
     private synchronized AccessToken getValidAccessToken() throws IOException {
