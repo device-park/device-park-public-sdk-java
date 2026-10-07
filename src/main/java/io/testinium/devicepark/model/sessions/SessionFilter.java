@@ -11,7 +11,9 @@ public enum SessionFilter {
     SERIAL("deviceSerial", String.class),
     STATE("state", String.class),
     USER_EMAIL("userEmail", String.class),
-    USER_ID("userId", String.class);
+    USER_ID("userId", Long.class),
+    COMPANY_ID("companyId", Long.class),
+    COMPANY_NAME("companyName", String.class);
 
     private final String dbField;
     private final Class<?> aClass;
