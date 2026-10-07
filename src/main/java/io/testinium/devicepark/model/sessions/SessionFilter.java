@@ -9,7 +9,9 @@ public enum SessionFilter {
     ALLOCATION("allocationId", String.class),
     SESSION("sessionId", String.class),
     SERIAL("deviceSerial", String.class),
-    STATE("state", String.class);
+    STATE("state", String.class),
+    USER_EMAIL("userEmail", String.class),
+    USER_ID("userId", String.class);
 
     private final String dbField;
     private final Class<?> aClass;
