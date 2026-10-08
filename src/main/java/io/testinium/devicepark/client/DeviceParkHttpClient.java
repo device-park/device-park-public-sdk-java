@@ -413,6 +413,18 @@ public class DeviceParkHttpClient extends AbstractApiService implements Closeabl
         cachedToken = null;
     }
 
+    /**
+     * Returns the current OAuth access token, refreshing it when it is missing or near expiry.
+     * Callers that place this value in a URL must not log it.
+     */
+    public String currentAccessToken() {
+        try {
+            return getValidAccessToken().accessToken();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to resolve access token", e);
+        }
+    }
+
     private synchronized AccessToken getValidAccessToken() throws IOException {
         if (cachedToken == null || !cachedToken.isValid(java.time.Duration.ofSeconds(60), java.time.Instant.now())) {
             cachedToken = fetchAccessToken();

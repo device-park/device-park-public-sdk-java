@@ -45,6 +45,10 @@ public final class AccessToken {
         return now.isBefore(expiresAt().minus(safetyMargin));
     }
 
+    public String accessToken() {
+        return accessToken;
+    }
+
     public String authorizationHeader() {
         return tokenType + " " + accessToken;
     }
