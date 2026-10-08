@@ -3,9 +3,9 @@ package io.testinium.devicepark.model.allocation;
 /**
  * Criteria sent in a new device allocation (allocation) request.
  *
- * <p>At least one targeting parameter ({@code serial} or {@code devicePoolId}
- * or a {@code platform}/{@code platformVersion} combination) must be provided.
- * The server allocates the first suitable device matching these criteria.</p>
+ * <p>Provide {@code serial} to pin one device, or at least one of {@code manufacturer},
+ * {@code model}, {@code platform}, and {@code platformVersion}. Blank profile fields are
+ * ignored. The server locks the first available device that matches the provided fields.</p>
  *
  * <h2>Example</h2>
  * <pre>
