@@ -13,6 +13,12 @@ import java.util.Objects;
  * Multiple {@link #revision()}s can exist under the same {@code fileKey};
  * each revision carries a different {@link #version()}.</p>
  *
+ * <p>Metadata fields are extracted from the uploaded artifact and are
+ * platform specific: {@link #bundleId()}, {@link #title()},
+ * {@link #ipaVersion()}, {@link #enterprise()} and {@link #minimumOsVersion()}
+ * are only populated for IPA uploads, {@link #minSdkVersion()} only for APK
+ * uploads. Fields that cannot be read from the artifact stay {@code null}.</p>
+ *
  * <p>Equality is computed via {@link #fileKey()}.</p>
  *
  * @since 1.0.0
@@ -26,17 +32,29 @@ public final class Application {
     private final String filePath;
     private final String downloadUrl;
     private final LocalDateTime createdAt;
+    private final String bundleId;
+    private final String title;
+    private final String ipaVersion;
+    private final Boolean enterprise;
+    private final String minimumOsVersion;
+    private final Integer minSdkVersion;
 
     /**
      * JSON deserileştirme için kullanılan constructor.
      *
-     * @param revision    revizyon numarası (artan)
-     * @param sizeInBytes dosya boyutu (byte)
-     * @param version     uygulama versiyonu (en fazla 50 karakter)
-     * @param fileKey     uygulamanın benzersiz anahtarı
-     * @param filePath    sunucudaki saklama yolu
-     * @param downloadUrl önceden imzalanmış indirme URL'i
-     * @param createdAt   yüklenme zamanı
+     * @param revision         revizyon numarası (artan)
+     * @param sizeInBytes      dosya boyutu (byte)
+     * @param version          uygulama versiyonu (en fazla 50 karakter)
+     * @param fileKey          uygulamanın benzersiz anahtarı
+     * @param filePath         sunucudaki saklama yolu
+     * @param downloadUrl      önceden imzalanmış indirme URL'i
+     * @param createdAt        yüklenme zamanı
+     * @param bundleId         IPA bundle identifier (yalnızca IPA)
+     * @param title            uygulama adı (yalnızca IPA)
+     * @param ipaVersion       IPA içinden okunan versiyon (yalnızca IPA)
+     * @param enterprise       enterprise imzalı IPA ise {@code true} (yalnızca IPA)
+     * @param minimumOsVersion desteklenen en düşük iOS sürümü (yalnızca IPA)
+     * @param minSdkVersion    desteklenen en düşük Android API seviyesi (yalnızca APK)
      */
     @JsonCreator
     public Application(
@@ -46,7 +64,13 @@ public final class Application {
             @JsonProperty("fileKey") String fileKey,
             @JsonProperty("filePath") String filePath,
             @JsonProperty("downloadUrl") String downloadUrl,
-            @JsonProperty("createdAt") LocalDateTime createdAt) {
+            @JsonProperty("createdAt") LocalDateTime createdAt,
+            @JsonProperty("bundleId") String bundleId,
+            @JsonProperty("title") String title,
+            @JsonProperty("ipaVersion") String ipaVersion,
+            @JsonProperty("enterprise") Boolean enterprise,
+            @JsonProperty("minimumOsVersion") String minimumOsVersion,
+            @JsonProperty("minSdkVersion") Integer minSdkVersion) {
         this.revision = revision;
         this.sizeInBytes = sizeInBytes;
         this.version = version;
@@ -54,6 +78,12 @@ public final class Application {
         this.filePath = filePath;
         this.downloadUrl = downloadUrl;
         this.createdAt = createdAt;
+        this.bundleId = bundleId;
+        this.title = title;
+        this.ipaVersion = ipaVersion;
+        this.enterprise = enterprise;
+        this.minimumOsVersion = minimumOsVersion;
+        this.minSdkVersion = minSdkVersion;
     }
 
     /**
@@ -106,6 +136,55 @@ public final class Application {
         return createdAt;
     }
 
+    /**
+     * @return IPA bundle identifier'ı (ör. {@code com.example.app}); IPA dışı
+     * yüklemelerde {@code null}
+     */
+    public String bundleId() {
+        return bundleId;
+    }
+
+    /**
+     * @return IPA Info.plist içinden okunan uygulama adı; IPA dışı yüklemelerde
+     * {@code null}
+     */
+    public String title() {
+        return title;
+    }
+
+    /**
+     * @return IPA Info.plist içinden okunan versiyon; yükleme sırasında verilen
+     * {@link #version()} değerinden farklı olabilir, IPA dışı yüklemelerde
+     * {@code null}
+     */
+    public String ipaVersion() {
+        return ipaVersion;
+    }
+
+    /**
+     * @return IPA enterprise provisioning profili ile imzalandıysa {@code true};
+     * IPA dışı yüklemelerde {@code null}
+     */
+    public Boolean enterprise() {
+        return enterprise;
+    }
+
+    /**
+     * @return IPA'nın desteklediği en düşük iOS sürümü (ör. {@code "13.0"});
+     * IPA dışı yüklemelerde {@code null}
+     */
+    public String minimumOsVersion() {
+        return minimumOsVersion;
+    }
+
+    /**
+     * @return APK'nın desteklediği en düşük Android API seviyesi (ör. {@code 24});
+     * APK dışı yüklemelerde {@code null}
+     */
+    public Integer minSdkVersion() {
+        return minSdkVersion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +203,9 @@ public final class Application {
         return "ApplicationResponse(fileKey=" + fileKey + ", filePath=" + filePath
                 + ", version=" + version + ", revision=" + revision
                 + ", sizeInBytes=" + sizeInBytes + ", downloadUrl=" + downloadUrl
-                + ", createdAt=" + createdAt + ")";
+                + ", createdAt=" + createdAt + ", bundleId=" + bundleId
+                + ", title=" + title + ", ipaVersion=" + ipaVersion
+                + ", enterprise=" + enterprise + ", minimumOsVersion=" + minimumOsVersion
+                + ", minSdkVersion=" + minSdkVersion + ")";
     }
 }
