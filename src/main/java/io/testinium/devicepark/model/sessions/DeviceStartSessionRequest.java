@@ -12,6 +12,7 @@ package io.testinium.devicepark.model.sessions;
  * DeviceStartSessionRequest req = DeviceStartSessionRequest.builder()
  *         .allocationId(allocation.allocationId())
  *         .videoRecording(true)
+ *         .videoRecordingScope(VideoRecordingScope.APPIUM_SESSION)
  *         .userEmail("user@example.com")
  *         .appiumVersion("2.5.0")
  *         .build();
@@ -25,6 +26,7 @@ public class DeviceStartSessionRequest {
     private String companyPoolId;
     private String sessionId;
     private Boolean videoRecording = false;
+    private VideoRecordingScope videoRecordingScope = VideoRecordingScope.FULL_SESSION;
     private Long userId;
     private String userEmail;
     private Long companyId;
@@ -62,6 +64,16 @@ public class DeviceStartSessionRequest {
 
     public void setVideoRecording(Boolean videoRecording) {
         this.videoRecording = videoRecording != null ? videoRecording : false;
+    }
+
+    public VideoRecordingScope getVideoRecordingScope() {
+        return videoRecordingScope;
+    }
+
+    public void setVideoRecordingScope(VideoRecordingScope videoRecordingScope) {
+        this.videoRecordingScope = videoRecordingScope != null
+                ? videoRecordingScope
+                : VideoRecordingScope.FULL_SESSION;
     }
 
     public Long getUserId() {
@@ -136,6 +148,11 @@ public class DeviceStartSessionRequest {
 
         public Builder videoRecording(Boolean videoRecording) {
             req.setVideoRecording(videoRecording);
+            return this;
+        }
+
+        public Builder videoRecordingScope(VideoRecordingScope videoRecordingScope) {
+            req.setVideoRecordingScope(videoRecordingScope);
             return this;
         }
 

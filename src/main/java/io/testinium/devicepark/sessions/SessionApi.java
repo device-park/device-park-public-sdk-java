@@ -10,6 +10,7 @@ import io.testinium.devicepark.model.sessions.DeviceSessionFilterRequest;
 import io.testinium.devicepark.model.sessions.DeviceSessionRequest;
 import io.testinium.devicepark.model.sessions.DeviceStartSessionRequest;
 import io.testinium.devicepark.model.sessions.Session;
+import io.testinium.devicepark.model.sessions.StreamUrl;
 import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecord;
 import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecordFilterRequest;
 import io.testinium.devicepark.model.sessions.screenRecord.ScreenRecordPaginationRequest;
@@ -31,6 +32,7 @@ import java.util.Map;
  * <h2>Endpoint Base Path</h2>
  * <ul>
  *   <li>Sessions: {@code /session/api/v2/public/sessions}</li>
+ *   <li>Screen stream URL: {@code /session/api/v2/public/sessions/{sessionId}/stream-url}</li>
  *   <li>Screen records: {@code /storage/api/v1/public/sessions/{sessionId}/screen-records}</li>
  * </ul>
  *
@@ -84,6 +86,25 @@ public final class SessionApi {
         String response = deviceParkHttpClient.post(SESSION_PATH, body, null);
         return JsonMapper.fromJson(response.getBytes(), new TypeReference<Session>() {
         });
+    }
+
+    /**
+     * Returns a WebSocket URL for watching the device screen of the given session.
+     *
+     * <p>The session-api response contains the stream address without a token.
+     * This method appends the SDK's current access token as the {@code token} query parameter.
+     * The returned URL must not be logged.</p>
+     *
+     * @param sessionId session to watch; must belong to the authenticated client
+     * @return complete {@code wss} URL including the access token
+     */
+    public String streamUrl(String sessionId) {
+        if (sessionId == null || sessionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("sessionId cannot be null or empty");
+        }
+        String response = deviceParkHttpClient.get(SESSION_PATH + "/" + sessionId + "/stream-url");
+        StreamUrl streamUrl = JsonMapper.fromJson(response, StreamUrl.class);
+        return StreamUrls.withAccessToken(streamUrl.url(), deviceParkHttpClient.currentAccessToken());
     }
 
     public void stop(String sessionId) {

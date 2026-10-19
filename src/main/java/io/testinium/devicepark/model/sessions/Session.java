@@ -36,6 +36,7 @@ public final class Session {
     private final String devicePlatform;
     private final String deviceVersion;
     private final Boolean videoRecording;
+    private final VideoRecordingScope videoRecordingScope;
     private final String videoRecordUrl;
     private final String appiumVersion;
     private final LocalDateTime createdAt;
@@ -63,6 +64,7 @@ public final class Session {
             @JsonProperty("devicePlatform") String devicePlatform,
             @JsonProperty("deviceVersion") String deviceVersion,
             @JsonProperty("videoRecording") Boolean videoRecording,
+            @JsonProperty("videoRecordingScope") VideoRecordingScope videoRecordingScope,
             @JsonProperty("videoRecordUrl") String videoRecordUrl,
             @JsonProperty("appiumVersion") String appiumVersion,
             @JsonProperty("createdAt") LocalDateTime createdAt,
@@ -87,6 +89,7 @@ public final class Session {
         this.devicePlatform = devicePlatform;
         this.deviceVersion = deviceVersion;
         this.videoRecording = videoRecording;
+        this.videoRecordingScope = videoRecordingScope;
         this.videoRecordUrl = videoRecordUrl;
         this.appiumVersion = appiumVersion;
         this.createdAt = createdAt;
@@ -170,6 +173,10 @@ public final class Session {
         return videoRecording;
     }
 
+    public VideoRecordingScope videoRecordingScope() {
+        return videoRecordingScope;
+    }
+
     public String videoRecordUrl() {
         return videoRecordUrl;
     }
@@ -209,4 +216,3 @@ public final class Session {
                 + ", state=" + state + ", deviceSerial=" + deviceSerial + ")";
     }
 }
-
