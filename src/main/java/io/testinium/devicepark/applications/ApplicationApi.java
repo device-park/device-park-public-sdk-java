@@ -1,6 +1,12 @@
 package io.testinium.devicepark.applications;
 
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.testinium.devicepark.DeviceParkApiClient;
 import io.testinium.devicepark.client.DeviceParkHttpClient;
 import io.testinium.devicepark.core.json.JsonMapper;
@@ -9,11 +15,6 @@ import io.testinium.devicepark.model.applications.ApplicationFilterRequest;
 import io.testinium.devicepark.model.applications.ApplicationPaginationRequest;
 import io.testinium.devicepark.model.common.PageDto;
 import io.testinium.devicepark.model.common.Sorting;
-
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * API service for mobile application (APK/IPA) management.
@@ -90,7 +91,7 @@ public final class ApplicationApi {
      * <p>Closing the stream is the caller's responsibility
      * (try-with-resources is recommended).</p>
      *
-     * <h3>Example</h3>
+     * <h4>Example</h4>
      * <pre>
      * try (InputStream in = Files.newInputStream(Paths.get("/path/app.apk"))) {
      *     Application app = client.applications().upload(in, "app.apk", "1.0.0");
@@ -117,6 +118,7 @@ public final class ApplicationApi {
      * @param fileName       file name to be used on the server
      * @param version        application version
      * @param imageInjection if true, gadget injection is applied
+     * @return metadata of the uploaded application
      */
     public Application upload(InputStream fileStream, String fileName, String version, boolean imageInjection) {
         if (fileStream == null) {
