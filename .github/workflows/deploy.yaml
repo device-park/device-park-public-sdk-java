@@ -44,4 +44,4 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Publish
-        run: mvn -B clean deploy -Pprod
+        run: mvn -B clean package central-publishing:publish -Pprod -Dmaven.repository.credentialScope=id
