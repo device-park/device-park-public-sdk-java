@@ -3,7 +3,7 @@ name: Publish Snapshot
 on:
   push:
     branches:
-      - dev
+      - pipeline-fix-maven-3.9+
   workflow_dispatch:
 
 permissions:
@@ -27,9 +27,10 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Publish Snapshot to Central
+      - name: Publish Snapshot to Central Portal
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B clean deploy -Pdev
+        run: |
+          mvn -B clean package central-publishing:publish -Pdev -Dmaven.repository.credentialScope=id
