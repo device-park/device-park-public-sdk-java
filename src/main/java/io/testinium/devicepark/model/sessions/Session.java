@@ -42,6 +42,7 @@ public final class Session {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final Instant dataAccessEndDate;
+    private final Instant expiresAt;
 
     @JsonCreator
     public Session(
@@ -69,7 +70,8 @@ public final class Session {
             @JsonProperty("appiumVersion") String appiumVersion,
             @JsonProperty("createdAt") LocalDateTime createdAt,
             @JsonProperty("updatedAt") LocalDateTime updatedAt,
-            @JsonProperty("dataAccessEndDate") Instant dataAccessEndDate) {
+            @JsonProperty("dataAccessEndDate") Instant dataAccessEndDate,
+            @JsonProperty("expiresAt") Instant expiresAt) {
         this.id = id;
         this.state = state;
         this.client = client;
@@ -95,6 +97,7 @@ public final class Session {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.dataAccessEndDate = dataAccessEndDate;
+        this.expiresAt = expiresAt;
     }
 
     public Long id() {
@@ -195,6 +198,10 @@ public final class Session {
 
     public Instant dataAccessEndDate() {
         return dataAccessEndDate;
+    }
+
+    public Instant expiresAt() {
+        return expiresAt;
     }
 
     @Override
