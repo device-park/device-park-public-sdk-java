@@ -33,6 +33,7 @@ import java.util.Map;
  * <ul>
  *   <li>Sessions: {@code /session/api/v2/public/sessions}</li>
  *   <li>Screen stream URL: {@code /session/api/v2/public/sessions/{sessionId}/stream-url}</li>
+ *   <li>Screen stream ticket: {@code /session/api/v2/public/sessions/{sessionId}/stream-ticket}</li>
  *   <li>Screen records: {@code /storage/api/v1/public/sessions/{sessionId}/screen-records}</li>
  * </ul>
  *
@@ -105,6 +106,31 @@ public final class SessionApi {
         String response = deviceParkHttpClient.get(SESSION_PATH + "/" + sessionId + "/stream-url");
         StreamUrl streamUrl = JsonMapper.fromJson(response, StreamUrl.class);
         return StreamUrls.withAccessToken(streamUrl.url(), deviceParkHttpClient.currentAccessToken());
+    }
+
+    /**
+     * Returns a one-time WebSocket URL for watching the device screen of the given session.
+     *
+     * <p>The URL contains a single-use ticket and does not include an access token.
+     * Each call creates a new ticket. Do not reuse a returned URL, including after a
+     * failed connection attempt. The returned URL must not be logged.</p>
+     *
+     * <p>{@link #streamUrl(String)} stays available and still appends the access token.
+     * New integrations should use this method.</p>
+     *
+     * @param sessionId session to watch; must belong to the authenticated client and be active
+     * @return complete {@code wss} URL including the ticket query parameter
+     */
+    public String streamTicketUrl(String sessionId) {
+        if (sessionId == null || sessionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("sessionId cannot be null or empty");
+        }
+        String response = deviceParkHttpClient.post(SESSION_PATH + "/" + sessionId + "/stream-ticket", null, null);
+        StreamUrl streamUrl = JsonMapper.fromJson(response, StreamUrl.class);
+        if (streamUrl.url() == null || streamUrl.url().trim().isEmpty()) {
+            throw new IllegalStateException("stream ticket URL is empty");
+        }
+        return streamUrl.url();
     }
 
     public void stop(String sessionId) {
